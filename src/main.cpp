@@ -95,7 +95,24 @@ int main() {
 	// TimePassedValue, used to keep track of the position of the sun, the usn will likely gain its own class and this will be moved
 	float timePassedValue = 0;
 
+	// Sun
+	Renderer::ShadowDirectionalLight sunLight(
+		Renderer::DirectionalLight(
+			glm::normalize(glm::vec3(0, 0.5, 1)),
+			glm::vec3(2, 2, 0.1),
+			0,
+			renderContext
+		),
+		glm::vec3(0, 0, 4000),
+		glm::vec3(0, 1, 0),
 
+		glm::vec2(-780, 780),
+		glm::vec2(0, 4000),
+		glm::vec2(0, 11000),
+
+		glm::uvec2(4096, 4096),
+		renderContext
+	);
 
 	// -- Geometry of terrain --
 	std::vector<uint32_t> indices;						// indices
@@ -248,6 +265,11 @@ int main() {
 		// Ambient light
 		node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::AmbientLight>>(
 			Renderer::AmbientLight(glm::vec3(0.04, 0.04, 0.02), renderContext), glm::mat4x4(1.f)
+			));
+
+		node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::ShadowDirectionalLight>>(
+			sunLight,
+			glm::mat4x4(1.f)
 			));
 
 		renderContext.render(windowWidth, windowHeight, node);
