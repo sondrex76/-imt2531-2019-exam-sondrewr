@@ -24,9 +24,9 @@ RenderContext::RenderContext()
       m_renderToScreenVertices(6, GL_ARRAY_BUFFER, GL_STATIC_DRAW) {
     // Set the material samplers to read from textures 0-3
     // This should match the texture units bound in Material::bind.
-    m_geomProgram.setSampler("albedoMap", 0);
-    m_geomProgram.setSampler("metallicMap", 1);
-    m_geomProgram.setSampler("roughnessMap", 2);
+    m_geomProgram.setSampler("diffuseMap", 0);
+    m_geomProgram.setSampler("specularMap", 1);
+    m_geomProgram.setSampler("shininessMap", 2);
     m_geomProgram.setSampler("emissiveMap", 3);
 
     // Set the shadow map sampler to read from texture 0
@@ -171,8 +171,8 @@ void RenderContext::renderPostPass(Renderer::ShaderProgram &program) {
     program.bind();
     program.setUniform("viewportSize", glm::vec2(m_gbuffer.width(), m_gbuffer.height()));
     glBindImageTexture(0, m_gbuffer.emissive().texture(), 0, false, 0, GL_READ_WRITE, GL_RGBA32F);
-    glBindImageTexture(1, m_gbuffer.albedoMetallic().texture(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
-    glBindImageTexture(2, m_gbuffer.normalRoughness().texture(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
+    glBindImageTexture(1, m_gbuffer.diffuseShininess().texture(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
+    glBindImageTexture(2, m_gbuffer.normal().texture(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
     glBindImageTexture(3, m_gbuffer.worldPos().texture(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
 
     dispatchPostPass();

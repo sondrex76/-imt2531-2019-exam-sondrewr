@@ -9,64 +9,13 @@ layout(std140, binding=0) uniform CameraData {
 
 #define M_PI 3.1415926535897932384626433832795
 
-// PBR based on https://learnopengl.com/PBR/Lighting
-vec3 fresnelSchlick(float cosTheta, vec3 f0) {
-    return f0 + (1. - f0) * pow(1. - cosTheta, 5.);
-}
+vec3 getLightRadiance(vec3 n, vec3 diffuse, vec3 specular, float shininess, vec3 v, vec3 l) {
+    float diffuseIntensity = max(dot(n, l), 0.);
 
-float distributionGGX(vec3 n, vec3 h, float roughness) {
-    float a = roughness * roughness;
-    float a2 = a * a;
-    float nDotH = max(dot(n, h), 0.);
-    float nDotH2 = nDotH * nDotH;
+    vec3 reflectDir = reflect(-l, n);
+    float specularIntensity = pow(max(dot(v, reflectDir), 0.), shininess);
 
-    float nom = a2;
-    float denom = (nDotH2 * (a2 - 1.) + 1.);
-    denom = M_PI * denom * denom;
-
-    return nom / denom;
-}
-
-float geometrySchlickGGX(float nDotV, float roughness) {
-    float r = roughness + 1.;
-    float k = (r * r) / 8.;
-
-    float nom = nDotV;
-    float denom = nDotV * (1. - k) + k;
-
-    return nom / denom;
-}
-
-float geometrySmith(vec3 n, vec3 v, vec3 l, float roughness) {
-    float nDotV = max(dot(n, v), 0.);
-    float nDotL = max(dot(n, l), 0.);
-    float ggx2 = geometrySchlickGGX(nDotV, roughness);
-    float ggx1 = geometrySchlickGGX(nDotL, roughness);
-
-    return ggx1 * ggx2;
-}
-
-vec3 getLightRadiance(vec3 n, vec3 albedo, float metallic, float roughness, vec3 worldPos, vec3 v, vec3 l) {
-    vec3 h = normalize(v + l);
-
-    vec3 f0 = mix(vec3(0.04), albedo, metallic);
-
-    // cook-torrance brdf
-    float ndf = distributionGGX(n, h, roughness);
-    float g = geometrySmith(n, v, l, roughness);
-    vec3 f = fresnelSchlick(max(dot(h, v), 0.), f0);
-
-    vec3 kS = f;
-    vec3 kD = 1. - kS;
-    kD *= 1. - metallic;
-
-    vec3 nominator = ndf * g * f;
-    float denominator = 4. * max(dot(n, v), 0.) * max(dot(n, l), 0.) + 0.001;
-    vec3 specular = nominator / denominator;
-
-    // add to outgoing radiance Lo
-    float nDotL = max(dot(n, l), 0.);
-    return (kD * albedo / M_PI + specular) * nDotL;
+    return diffuseIntensity * diffuse + specularIntensity * specular;
 }
 
 // Based on https://www.shadertoy.com/view/Msf3WH

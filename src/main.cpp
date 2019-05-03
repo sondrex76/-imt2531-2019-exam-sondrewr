@@ -41,9 +41,6 @@
 #include "renderer/SpotLight.h"
 #include "renderer/AmbientLight.h"
 
-// Fragment shaders are run on each pixel which is filled by a poligon
-// Vertex shaders are applied to each vertex, So normally they take in a 3D position(the vertex pos) and camera data(view and projection matrices) and convert that position into "clip space"(screen actual position basically).
-
 int main() {
 	if (!glfwInit()) {
 		GFX_ERROR("Failed to initialize GLFW");
@@ -98,7 +95,8 @@ int main() {
 		cubeIndices.push_back(i);
 
 	// DEBUG: remove before delivering!
-	Renderer::Material cubeMaterial = Renderer::Material(glm::vec3(0, 1, 1), 1.0f, 1.0f, glm::vec3(1, 0, 1));
+	// diffuse, specular, shininess, emissive
+	Renderer::Material cubeMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0, 0, 0)));
 	Renderer::Model cube = Renderer::Model::fromGeometry(vertices, 36, &cubeIndices[0], cubeIndices.size(), std::move(cubeMaterial), renderContext);
 
 
@@ -142,23 +140,19 @@ int main() {
 				glm::vec3(0, 1, 0)																	// Defines the up direction
 			);																
 			
-		// node
+		// Scenegraph called node
 		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), objectPos));
 
 		// Order: transformation, Rotation, Scale
-
-		// testModel, glm::vec3(1, 1, 1) is the coordinates of the model itself
-		// node.addNode(std::make_unique<Scenegraph::GeometryNode>(Renderer::Model, glm::translate(glm::scale(glm::mat4x4(1.f), glm::vec3(scale, scale, scale)), glm::vec3(xCordsOfModel, yCordsOfModel, zCordsOfModel))));
-		
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(
 			deerModel,
 			glm::translate(
 				glm::rotate(
 					glm::scale(
 						glm::mat4x4(1.f),				// Identity matrix
-						glm::vec3(60.0f, 60.0f, 60.0f)	// Scale
+						glm::vec3(40.0f, 40.0f, 40.0f)	// Scale
 					), 
-					(float)(180.f * M_PI / 180.f),		// Angle to rotate
+					(float)(90.f * M_PI / 180.f),		// Angle to rotate
 					glm::vec3(0, 1, 0)					// Axis to rotate around
 				), 
 				glm::vec3(1, 1, 1)						// Offset/Coordinates
@@ -169,8 +163,8 @@ int main() {
 		// When moving node into other node, do whatever you want with it before moving it into another group, as it becoems invalid afterwards
 
 		// Scenegraph::GroupNode node2(glm::translate(glm::mat4x4(1.f), objectPos)); // This becoems the line below
-		auto node2 = std::make_unique<Scenegraph::GroupNode>(glm::translate(glm::mat4x4(1.f), objectPos));
-		node.addNode(std::move(node2)); // move because it is put into a variable first
+		// auto node2 = std::make_unique<Scenegraph::GroupNode>(glm::translate(glm::mat4x4(1.f), objectPos));
+		// node.addNode(std::move(node2)); // move because it is put into a variable first
 		// node.addNode(std::make_unique<Scenegraph::GroupNode>(glm::translate(glm::mat4x4(1.f), objectPos))); // This would also work
 		
 
@@ -187,16 +181,19 @@ int main() {
 			20000.f                                     										// far z
 			));
 
-
+		// Ambient light
 		node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::AmbientLight>>(
-			Renderer::AmbientLight(glm::vec3(0.4, 0.4, 0.2), renderContext), glm::mat4x4(1.f)
+			Renderer::AmbientLight(glm::vec3(0.04, 0.04, 0.02), renderContext), glm::mat4x4(1.f)
 			));
 
+		/*
 		// DEBUG
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(cube, glm::scale(
-			glm::mat4x4(1.f),			// Identity matrix
-			glm::vec3(12.0f, 12.0f, 12.0f) // Scale
+			glm::mat4x4(1.f),				// Identity matrix
+			glm::vec3(12.0f, 12.0f, 12.0f)	// Scale
 		)));
+		*/
+
 
 		renderContext.render(windowWidth, windowHeight, node);
 

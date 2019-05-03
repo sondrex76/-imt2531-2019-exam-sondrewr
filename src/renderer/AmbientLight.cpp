@@ -14,7 +14,7 @@ void AmbientLight::render(const Renderer::GBuffer &gbuffer, Renderer::ColorTextu
     program.setUniform("lightColor", m_color);
 
     glBindImageTexture(0, target.texture(), 0, false, 0, GL_READ_WRITE, GL_RGBA32F);
-    glBindImageTexture(1, gbuffer.albedoMetallic().texture(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
+    glBindImageTexture(1, gbuffer.diffuseShininess().texture(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
 
     glDispatchCompute((gbuffer.width() + 7) / 8, (gbuffer.height() + 7) / 8, 1);
 

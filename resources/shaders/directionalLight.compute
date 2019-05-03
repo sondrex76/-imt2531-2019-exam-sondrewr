@@ -2,9 +2,10 @@ layout(local_size_x = 8, local_size_y = 8) in;
 
 layout(rgba32f, binding=0) uniform image2D litMap;
 
-layout(rgba32f, binding=1) uniform readonly image2D albedoMetallicMap;
-layout(rgba32f, binding=2) uniform readonly image2D normalRoughnessMap;
-layout(rgba32f, binding=3) uniform readonly image2D worldPosMap;
+layout(rgba32f, binding=1) uniform readonly image2D diffuseShininessMap;
+layout(rgba32f, binding=2) uniform readonly image2D specularMap;
+layout(rgba32f, binding=3) uniform readonly image2D normalMap;
+layout(rgba32f, binding=4) uniform readonly image2D worldPosMap;
 
 uniform vec3 lightDirection;
 uniform vec3 lightColor;
@@ -16,8 +17,10 @@ uniform sampler2D shadowMap;
 
 void main() {
     ivec2 texturePos = ivec2(gl_GlobalInvocationID.xy);
-    vec4 albedoMetallic = imageLoad(albedoMetallicMap, texturePos);
-    vec4 normalRoughness = imageLoad(normalRoughnessMap, texturePos);
+
+    vec4 diffuseShininess = imageLoad(diffuseShininessMap, texturePos);
+    vec4 specular = imageLoad(specularMap, texturePos);
+    vec4 normal = imageLoad(normalMap, texturePos);
     vec4 worldPos = imageLoad(worldPosMap, texturePos);
 
     // Skip the sky
@@ -33,7 +36,7 @@ void main() {
         float shadowMapDepth = texture(shadowMap, normalShadowCoord.xy * 0.5 + 0.5).x;
 
         // Apply a small bias to avoid 'freckles' based on the light and surface direction
-        float bias = max(0.0001 * (1. - dot(normalRoughness.xyz, lightDirection)), 0.0001);
+        float bias = max(0.0001 * (1. - dot(normal.xyz, lightDirection)), 0.0001);
 
         // The surface is in shadow if shadowMapDepth < normalShadowCoord.z
         lightIntensity = step(shadowMapDepth, normalShadowCoord.z + bias);
@@ -45,16 +48,15 @@ void main() {
 
     vec3 v = normalize(camera.position.xyz - worldPos.xyz);
     vec3 computedColor = getLightRadiance(
-        normalRoughness.xyz, // normal
-        albedoMetallic.rgb, // albedo
-        albedoMetallic.a, // metallic
-        normalRoughness.a, // roughness
-        worldPos.xyz, // worldPos
+        normal.xyz, // normal
+        diffuseShininess.rgb, // diffuse
+        specular.rgb, // specular
+        diffuseShininess.a, // shininess
         v,
         lightDirection
     );
     computedColor *= lightIntensity; // apply shadows
-    computedColor += albedoMetallic.rgb * lightAmbient; // add ambient light
+    computedColor += diffuseShininess.rgb * lightAmbient; // add ambient light
     computedColor *= lightColor.rgb; // apply light colour
 
     vec4 addedColor = imageLoad(litMap, texturePos) + vec4(computedColor, 0.);
