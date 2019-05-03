@@ -37,6 +37,7 @@
 #include "engine/consts.h"
 #include "engine/Functions.h"
 #include "engine/CubeVertex.h"
+#include "engine/Enviorment.h"
 
 #include "renderer/SpotLight.h"
 #include "renderer/AmbientLight.h"
@@ -77,6 +78,8 @@ int main() {
 	// Context of rendering
 	Renderer::RenderContext renderContext;
 
+	std::cout << "TEST" << std::endl;
+
 	// Models
 	Renderer::Model deerModel = Renderer::Model::fromObjFile("deer/deer.obj", renderContext);
 
@@ -89,6 +92,7 @@ int main() {
 	// TimePassedValue, value used to increase road and note speed, WIP, currently does nothing
 	float timePassedValue = 0;
 
+
 	// Custom shape
 	std::vector<uint32_t> cubeIndices;
 	for (int i = 0; i < 36; i++)
@@ -96,14 +100,11 @@ int main() {
 
 	// DEBUG: remove before delivering!
 	// diffuse, specular, shininess, emissive
-	Renderer::Material cubeMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0, 0, 0)));
+	Renderer::Material cubeMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(1.0f, 1.0f, 1.0f)));
 	Renderer::Model cube = Renderer::Model::fromGeometry(vertices, 36, &cubeIndices[0], cubeIndices.size(), std::move(cubeMaterial), renderContext);
-
-
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
-
 		int windowWidth, windowHeight;
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
@@ -125,7 +126,6 @@ int main() {
 
 		}
 
-
 		// x, y, z coordinates of camera and object
 		glm::vec3 cameraPos = glm::vec3(0, 0., 500.);
 		glm::vec3 objectPos = glm::vec3(0, 0, 0);		// Node position, changing this changes locaiton both of the object and of the camera
@@ -142,6 +142,12 @@ int main() {
 			
 		// Scenegraph called node
 		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), objectPos));
+
+		// DEBUG
+		node.addNode(std::make_unique<Scenegraph::GeometryNode>(cube, glm::scale(
+			glm::mat4x4(1.f),				// Identity matrix
+			glm::vec3(12.0f, 12.0f, 12.0f)	// Scale
+		)));
 
 		// Order: transformation, Rotation, Scale
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(
@@ -186,13 +192,8 @@ int main() {
 			Renderer::AmbientLight(glm::vec3(0.04, 0.04, 0.02), renderContext), glm::mat4x4(1.f)
 			));
 
-		/*
-		// DEBUG
-		node.addNode(std::make_unique<Scenegraph::GeometryNode>(cube, glm::scale(
-			glm::mat4x4(1.f),				// Identity matrix
-			glm::vec3(12.0f, 12.0f, 12.0f)	// Scale
-		)));
-		*/
+		
+		
 
 
 		renderContext.render(windowWidth, windowHeight, node);
