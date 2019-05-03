@@ -119,19 +119,31 @@ int main() {
 		}
 	}
 
+	// TODO: make normals not just be 1, 1, 1
+
 	// Create vertevies based on heightmap
 	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
 		for (int y = 0; y < SIZE_ENVIORMENT; y++) { // y
 			// There is a point both to the right, down and across
 			// This means triangles are to be generated based on the height map
 			if (x + 1 < SIZE_ENVIORMENT && y + 1 < SIZE_ENVIORMENT) {
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Upper/right triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				glm::vec3 vectors[] = {
+					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)),
+					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y),
+					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),
+					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),
+					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)),
+					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1))
+				};
+				glm::vec3 normal1 = getNormals(vectors[0], vectors[1], vectors[2]), normal2 = getNormals(vectors[3], vectors[4], vectors[5]);
+
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0.5, 0.5} }); // Upper/right triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
 				
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Lower/left triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0.5, 0.5} }); // Lower/left triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
 			}
 		}
 	}

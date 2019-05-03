@@ -4,7 +4,7 @@ using namespace Renderer;
 
 static Framebuffer createFb(ColorTexture *diffuseShininess, ColorTexture *specular, ColorTexture *emissive, ColorTexture *normal, ColorTexture *worldPos, DepthStencilTexture *depth) {
     ColorTexture *colors[] = {diffuseShininess, specular, emissive, normal, worldPos};
-    return Framebuffer::textures(4, colors, depth);
+    return Framebuffer::textures(5, colors, depth);
 }
 
 GBuffer::GBuffer()
