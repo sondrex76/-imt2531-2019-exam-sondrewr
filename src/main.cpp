@@ -97,6 +97,7 @@ int main() {
 	for (int i = 0; i < 36; i++)
 		cubeIndices.push_back(i);
 
+	// DEBUG: remove before delivering!
 	Renderer::Material cubeMaterial = Renderer::Material(glm::vec3(0, 1, 1), 1.0f, 1.0f, glm::vec3(1, 0, 1));
 	Renderer::Model cube = Renderer::Model::fromGeometry(vertices, 36, &cubeIndices[0], cubeIndices.size(), std::move(cubeMaterial), renderContext);
 
@@ -113,12 +114,19 @@ int main() {
 		glfwGetCursorPos(window, &xpos, &ypos);
 		previousMousePosX = xpos, previousMousePosY = ypos; // Updates values
 
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {   // D key, move right
+		// Movement detection
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
+
+		} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {	// A key, move left
 
 		}
-		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {  // A key, move left
+		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
+			
+		}
+		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
 
 		}
+
 
 		// x, y, z coordinates of camera and object
 		glm::vec3 cameraPos = glm::vec3(0, 0., 500.);
@@ -140,23 +148,22 @@ int main() {
 		// Order: transformation, Rotation, Scale
 
 		// testModel, glm::vec3(1, 1, 1) is the coordinates of the model itself
-			// node.addNode(std::make_unique<Scenegraph::GeometryNode>(Renderer::Model, glm::translate(glm::scale(glm::mat4x4(1.f), glm::vec3(scale, scale, scale)), glm::vec3(xCordsOfModel, yCordsOfModel, zCordsOfModel))));
-		/*
-		node.addNode(std::make_unique<Scenegraph::GeometryNode>(testModel, glm::translate(glm::scale(glm::mat4x4(1.f), glm::vec3(1.2f, 1.2f, 1.2f)), glm::vec3(0, 0, 0))));
+		// node.addNode(std::make_unique<Scenegraph::GeometryNode>(Renderer::Model, glm::translate(glm::scale(glm::mat4x4(1.f), glm::vec3(scale, scale, scale)), glm::vec3(xCordsOfModel, yCordsOfModel, zCordsOfModel))));
+		
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(
-			cityModel, 
+			deerModel,
 			glm::translate(
 				glm::rotate(
 					glm::scale(
-						glm::mat4x4(1.f),			// Identity matrix
-						glm::vec3(0.2f, 0.2f, 0.2f) // Scale
+						glm::mat4x4(1.f),				// Identity matrix
+						glm::vec3(60.0f, 60.0f, 60.0f)	// Scale
 					), 
-					0.6f,							// Angle to rotate
-					glm::vec3(1, 0, 0)				// Axis to rotate around
+					(float)(180.f * M_PI / 180.f),		// Angle to rotate
+					glm::vec3(0, 1, 0)					// Axis to rotate around
 				), 
-				glm::vec3(1, 1, 1)					// Offset/Coordinates
+				glm::vec3(1, 1, 1)						// Offset/Coordinates
 			)
-			)); */
+			)); 
 
 		// group
 		// When moving node into other node, do whatever you want with it before moving it into another group, as it becoems invalid afterwards
@@ -180,11 +187,12 @@ int main() {
 			20000.f                                     										// far z
 			));
 
-		// Ambient light, can probably be removed
+
 		node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::AmbientLight>>(
-			Renderer::AmbientLight(glm::vec3(0.02, 0.001, 0.1), renderContext), glm::mat4x4(1.f)
+			Renderer::AmbientLight(glm::vec3(0.4, 0.4, 0.2), renderContext), glm::mat4x4(1.f)
 			));
 
+		// DEBUG
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(cube, glm::scale(
 			glm::mat4x4(1.f),			// Identity matrix
 			glm::vec3(12.0f, 12.0f, 12.0f) // Scale
