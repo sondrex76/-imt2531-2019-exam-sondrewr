@@ -3,3 +3,4 @@
 ## Functionality
 
 ## Sources of resources
+Perlin noise: https://en.wikipedia.org/wiki/Perlin_noise

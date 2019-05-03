@@ -4,6 +4,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#include <random>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -36,9 +37,13 @@
 
 #include "engine/consts.h"
 #include "engine/Functions.h"
+#include "engine/PerlinNoise.h"
 
 #include "renderer/SpotLight.h"
 #include "renderer/AmbientLight.h"
+
+// Global values of gradiant
+float globalGradient[SIZE_ZONES][SIZE_ZONES][2];
 
 int main() {
 	if (!glfwInit()) {
@@ -91,8 +96,8 @@ int main() {
 	float timePassedValue = 0;
 
 
-	// -- Geometry of terrain --
 
+	// -- Geometry of terrain --
 	std::vector<uint32_t> indices;						// indices
 	std::vector<Renderer::Vertex> vertices;				// vector with vertexes
 
@@ -107,10 +112,21 @@ int main() {
 	// Random in this case is deterministic based on the seed given
 	int heights[SIZE_ENVIORMENT][SIZE_ENVIORMENT];	// Heightmap of map, all values should be a value form 0..255
 
+	// Random number generator
+	std::default_random_engine generator;
+	std::uniform_real_distribution<float> distribution(0, MAX_HEIGHT);
+
+	for (int i = 0; i < SIZE_ZONES; i++) {
+		for (int n = 0; n < SIZE_ZONES; n++) {
+			globalGradient[SIZE_ZONES][SIZE_ZONES][0] = distribution(generator);
+			globalGradient[SIZE_ZONES][SIZE_ZONES][1] = distribution(generator);
+		}
+	}
+
 	// TODO: Generate heightmap instead of having a set height
 	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
 		for (int n = 0; n < SIZE_ENVIORMENT; n++) { // y
-			heights[i][n] = 0; // temp heightmap generation
+			heights[i][n] = perlin(i / 10.0f, n / 10.0f);
 		}
 	}
 
@@ -151,7 +167,7 @@ int main() {
 
 	// Generates material and actual terrain
 	Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
-	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 3, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
+	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
