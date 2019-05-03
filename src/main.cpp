@@ -137,14 +137,14 @@ int main() {
 		for (int n = 0; n < SIZE_ZONES; n++) {
 			globalGradient[i][n][0] = distribution(generator);
 
-			if (i < SIZE_ZONES || n > SIZE_ZONES && i > SIZE_ZONES)
-				globalGradient[i][n][1] /= 2; // attempt at making the terrain decrease in height at certain points
+			if (i < SIZE_ZONES || n > SIZE_ZONES && i > SIZE_ZONES) // Attempt at making the terrain decrease in height at certain points
+				globalGradient[i][n][1] /= 2; 
 			else
 				globalGradient[i][n][1] = distribution(generator);
 		}
 	}
 
-	// TODO: Generate heightmap instead of having a set height
+	// Generates map through perlin noise
 	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
 		for (int n = 0; n < SIZE_ENVIORMENT; n++) { // y
 			heights[i][n] = perlin(i / 10.0f, n / 10.0f);

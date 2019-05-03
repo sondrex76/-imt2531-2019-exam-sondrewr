@@ -10,11 +10,11 @@ float dotGridGradient(int ix, int iy, float x, float y) {
 	// Precomputed (or otherwise) gradient vectors at each grid node
 	extern float globalGradient[SIZE_ZONES][SIZE_ZONES][2];
 
-	// Compute the distance vector
+	// Calculate distance values
 	float dx = x - (float)ix;
 	float dy = y - (float)iy;
 
-	// Compute the dot-product
+	// Calculate scalar product
 	return (dx * globalGradient[iy][ix][0] + dy * globalGradient[iy][ix][1]);
 }
 
