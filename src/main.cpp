@@ -124,11 +124,11 @@ int main() {
 		for (int y = 0; y < SIZE_ENVIORMENT; y++) { // y
 			// There is a point both to the right, down and across
 			// This means triangles are to be generated based on the height map
-			if (x + 1 < SIZE_ENVIORMENT && y + 1 < SIZE_ENVIORMENT) { 
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Upper/right triangle
+			if (x + 1 < SIZE_ENVIORMENT && y + 1 < SIZE_ENVIORMENT) {
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Upper/right triangle
 				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
-
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				
 				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Lower/left triangle
 				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
@@ -174,8 +174,8 @@ int main() {
 			glm::vec4(cameraPos, 0)) * 
 			glm::rotate(
 				glm::mat4x4(1.f),																	// Identify matrix
-				0.0f,																				// Angle to rotate
-				//(float)((ypos - previousMousePosX) / 200.0f),										// Comment out the above and uncomment this to rotate camera around car again
+				//0.0f,																				// Angle to rotate
+				(float)((ypos - previousMousePosX) / 200.0f),										// Comment out the above and uncomment this to rotate camera around car again
 				glm::vec3(0, 1, 0)																	// Defines the up direction
 			);																
 			
