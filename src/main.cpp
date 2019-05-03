@@ -36,7 +36,6 @@
 
 #include "engine/consts.h"
 #include "engine/Functions.h"
-#include "engine/CubeVertex.h"
 
 #include "renderer/SpotLight.h"
 #include "renderer/AmbientLight.h"
@@ -97,9 +96,16 @@ int main() {
 	std::vector<uint32_t> indices;						// indices
 	std::vector<Renderer::Vertex> vertices;				// vector with vertexes
 
-	// Each triangle has three coordinates
-	for (int i = 0; i < SIZE_TERRAIN * 3; i++) {
-		indices.push_back(i);
+	// Number of indices
+	int numIndices = 0;
+	// Adds one for all elements up and left
+	for (int i = 0; i < pow(SIZE_ENVIORMENT - 1, 2); i++) { // each loop adds one cube, which consists of two triangles
+		indices.push_back(numIndices++); // adds starting triangle
+		indices.push_back(numIndices++); // adds starting triangle
+		indices.push_back(numIndices++); // adds starting triangle
+		indices.push_back(numIndices++); // adds starting triangle
+		indices.push_back(numIndices++); // adds starting triangle
+		indices.push_back(numIndices++); // adds starting triangle
 	}
 
 	// To have seperate colors, this needs to be split into a vector of models rather then a single one
@@ -118,22 +124,22 @@ int main() {
 		for (int y = 0; y < SIZE_ENVIORMENT; y++) { // y
 			// There is a point both to the right, down and across
 			// This means triangles are to be generated based on the height map
-			if (x + 1 > SIZE_ENVIORMENT && y + 1 > SIZE_ENVIORMENT) { 
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Upper/right triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+			if (x + 1 < SIZE_ENVIORMENT && y + 1 < SIZE_ENVIORMENT) { 
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Upper/right triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
 
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Lower/left triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Lower/left triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
 			}
 		}
 	}
-
+	std::cout << indices.size() << std::endl << vertices.size() << std::endl;
 
 	// Generates material and actual terrain
-	Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(1.0f, 1.0f, 1.0f)));
-	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], 36, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
+	Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
+	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2), &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
 
 	// Game loop
@@ -176,12 +182,12 @@ int main() {
 		// Scenegraph called node
 		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), objectPos));
 
-		/* // Render the terrain
+		 // Render the terrain
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(terrainGeometry, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix
-			glm::vec3(12.0f, 12.0f, 12.0f)	// Scale
+			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
 		)));
-		*/
+		
 
 		// Order: transformation, Rotation, Scale
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(
