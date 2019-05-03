@@ -136,7 +136,11 @@ int main() {
 	for (int i = 0; i < SIZE_ZONES; i++) {
 		for (int n = 0; n < SIZE_ZONES; n++) {
 			globalGradient[i][n][0] = distribution(generator);
-			globalGradient[i][n][1] = distribution(generator);
+
+			if (i < SIZE_ZONES || n > SIZE_ZONES && i > SIZE_ZONES)
+				globalGradient[i][n][1] /= 2; // attempt at making the terrain decrease in height at certain points
+			else
+				globalGradient[i][n][1] = distribution(generator);
 		}
 	}
 

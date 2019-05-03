@@ -1,8 +1,9 @@
 #include "PerlinNoise.h"
 
-float lerp(float a0, float a1, float w) {
-	return (1.0f - w) * a0 + w * a1;
+float lerp(float value1, float value2, float distance) {
+	return (1.0f - distance) * value1 + distance * value2;
 }
+
 // Computes the dot product of the distance and gradient vectors.
 float dotGridGradient(int ix, int iy, float x, float y) {
 
@@ -17,29 +18,29 @@ float dotGridGradient(int ix, int iy, float x, float y) {
 	return (dx * globalGradient[iy][ix][0] + dy * globalGradient[iy][ix][1]);
 }
 
-// Compute Perlin noise at coordinates x, y
+// Compute Perlin noise at coordinates x, y, must send x and y coordinates divided on 10
 float perlin(float x, float y) {
 
 	// Determine grid cell coordinates
-	int x0 = (int)x;
-	int x1 = x0 + 1;
-	int y0 = (int)y;
-	int y1 = y0 + 1;
+	int lowerLeft = (int)x;
+	int lowerRight = lowerLeft + 1;
+	int upperLeft = (int)y;
+	int upperRight = upperLeft + 1;
 
 	// Determine interpolation weights
 	// Could also use higher order polynomial/s-curve here
-	float sx = x - (float)x0;
-	float sy = y - (float)y0;
+	float sx = x - (float)lowerLeft;
+	float sy = y - (float)upperLeft;
 
 	// Interpolate between grid point gradients
 	float n0, n1, ix0, ix1, value;
 
-	n0 = dotGridGradient(x0, y0, x, y);
-	n1 = dotGridGradient(x1, y0, x, y);
+	n0 = dotGridGradient(lowerLeft, upperLeft, x, y);
+	n1 = dotGridGradient(lowerRight, upperLeft, x, y);
 	ix0 = lerp(n0, n1, sx);
 
-	n0 = dotGridGradient(x0, y1, x, y);
-	n1 = dotGridGradient(x1, y1, x, y);
+	n0 = dotGridGradient(lowerLeft, upperRight, x, y);
+	n1 = dotGridGradient(lowerRight, upperRight, x, y);
 	ix1 = lerp(n0, n1, sx);
 
 	value = lerp(ix0, ix1, sy);
