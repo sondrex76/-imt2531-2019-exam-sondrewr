@@ -112,14 +112,14 @@ int main() {
 	// Define all vertecis to generate terrain, value will be allowed to be anywhere from 0..255
 	int heights[SIZE_ENVIORMENT][SIZE_ENVIORMENT];	// Heightmap of map
 
-	// TODO: Generate heightmap
+	// TODO: Generate heightmap instead of having a set height
 	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
 		for (int n = 0; n < SIZE_ENVIORMENT; n++) { // y
 			heights[i][n] = 0; // temp heightmap generation
 		}
 	}
 
-	// TODO: make normals not just be 1, 1, 1
+	int debugX = 0, debugY = 0;
 
 	// Create vertevies based on heightmap
 	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
@@ -127,31 +127,38 @@ int main() {
 			// There is a point both to the right, down and across
 			// This means triangles are to be generated based on the height map
 			if (x + 1 < SIZE_ENVIORMENT && y + 1 < SIZE_ENVIORMENT) {
+				// the vectors of the coordinates to be used
 				glm::vec3 vectors[] = {
-					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)),
+					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)),	// Upper/right triangle
 					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y),
 					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),
-					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),
+
+					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),						// Lower/left triangle
 					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)),
 					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1))
 				};
+				// Normal values
 				glm::vec3 normal1 = getNormals(vectors[0], vectors[1], vectors[2]), normal2 = getNormals(vectors[3], vectors[4], vectors[5]);
 
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0.5, 0.5} }); // Upper/right triangle
+				// Upper/right triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
 				
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0.5, 0.5} }); // Lower/left triangle
+				// Lower/left triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
+				debugY++; // 9801
 			}
 		}
 	}
-	std::cout << indices.size() << std::endl << vertices.size() << std::endl;
+
+	std::cout << debugX << ", " << debugY << std::endl;
 
 	// Generates material and actual terrain
 	Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
-	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2), &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
+	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 3, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
 
 	// Game loop
