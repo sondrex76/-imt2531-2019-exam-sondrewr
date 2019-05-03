@@ -118,8 +118,8 @@ int main() {
 
 	for (int i = 0; i < SIZE_ZONES; i++) {
 		for (int n = 0; n < SIZE_ZONES; n++) {
-			globalGradient[SIZE_ZONES][SIZE_ZONES][0] = distribution(generator);
-			globalGradient[SIZE_ZONES][SIZE_ZONES][1] = distribution(generator);
+			globalGradient[i][n][0] = distribution(generator);
+			globalGradient[i][n][1] = distribution(generator);
 		}
 	}
 

@@ -4,6 +4,7 @@
 float lerp(float a0, float a1, float w) {
 	return (1.0f - w) * a0 + w * a1;
 }
+#include <iostream> // DEBUG
 
 // Computes the dot product of the distance and gradient vectors.
 float dotGridGradient(int ix, int iy, float x, float y) {
@@ -15,11 +16,12 @@ float dotGridGradient(int ix, int iy, float x, float y) {
 	float dx = x - (float)ix;
 	float dy = y - (float)iy;
 
+	//std::cout << globalGradient[iy][ix][1] << std::endl;
+
 	// Compute the dot-product
 	return (dx * globalGradient[iy][ix][0] + dy * globalGradient[iy][ix][1]);
 }
 
-#include <iostream> // DEBUG
 
 // Compute Perlin noise at coordinates x, y
 float perlin(float x, float y) {
