@@ -102,7 +102,33 @@ int main() {
 		indices.push_back(i);
 	}
 
-	// Define all vertecis to generate terrain
+	// To have seperate colors, this needs to be split into a vector of models rather then a single one
+	// Define all vertecis to generate terrain, value will be allowed to be anywhere from 0..255
+	int heights[SIZE_ENVIORMENT][SIZE_ENVIORMENT];	// Heightmap of map
+
+	// TODO: Generate heightmap
+	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
+		for (int n = 0; n < SIZE_ENVIORMENT; n++) { // y
+			heights[i][n] = 0; // temp heightmap generation
+		}
+	}
+
+	// Create vertevies based on heightmap
+	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
+		for (int y = 0; y < SIZE_ENVIORMENT; y++) { // y
+			// There is a point both to the right, down and across
+			// This means triangles are to be generated based on the height map
+			if (x + 1 > SIZE_ENVIORMENT && y + 1 > SIZE_ENVIORMENT) { 
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Upper/right triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} }); // Lower/left triangle
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{SIZE_TERRAIN * x, SIZE_TERRAIN * y, SIZE_TERRAIN * heights[x][y]}, /*norm*/{1, 1, 1}, /*uv*/{0.5, 0.5} });
+			}
+		}
+	}
 
 
 	// Generates material and actual terrain
