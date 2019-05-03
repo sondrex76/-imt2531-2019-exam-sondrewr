@@ -76,10 +76,10 @@ int main() {
 	// Context of rendering
 	Renderer::RenderContext renderContext;
 
-	std::cout << "TEST" << std::endl;
-
 	// Models
-	Renderer::Model deerModel = Renderer::Model::fromObjFile("deer/deer.obj", renderContext);
+	Renderer::Model deerEye = Renderer::Model::fromObjFile("deerEyes/deer.obj", renderContext);
+	Renderer::Model deerHead = Renderer::Model::fromObjFile("deerHead/deer.obj", renderContext);
+	Renderer::Model deerBody = Renderer::Model::fromObjFile("deerBody/deer.obj", renderContext);
 
 	// Sound
 	// PlaySound("resources/Sound/<name of file>.wav", NULL, SND_LOOP | SND_ASYNC);
@@ -99,18 +99,13 @@ int main() {
 	// Number of indices
 	int numIndices = 0;
 	// Adds one for all elements up and left
-	for (int i = 0; i < pow(SIZE_ENVIORMENT - 1, 2); i++) { // each loop adds one cube, which consists of two triangles
-		indices.push_back(numIndices++); // adds starting triangle
-		indices.push_back(numIndices++); // adds starting triangle
-		indices.push_back(numIndices++); // adds starting triangle
-		indices.push_back(numIndices++); // adds starting triangle
-		indices.push_back(numIndices++); // adds starting triangle
-		indices.push_back(numIndices++); // adds starting triangle
+	for (int i = 0; i < pow(SIZE_ENVIORMENT - 1, 2) * 6; i++) { // each loop adds one cube, which consists of two triangles
+		indices.push_back(numIndices++);
 	}
 
 	// To have seperate colors, this needs to be split into a vector of models rather then a single one
-	// Define all vertecis to generate terrain, value will be allowed to be anywhere from 0..255
-	int heights[SIZE_ENVIORMENT][SIZE_ENVIORMENT];	// Heightmap of map
+	// Random in this case is deterministic based on the seed given
+	int heights[SIZE_ENVIORMENT][SIZE_ENVIORMENT];	// Heightmap of map, all values should be a value form 0..255
 
 	// TODO: Generate heightmap instead of having a set height
 	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
@@ -149,17 +144,14 @@ int main() {
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
-				debugY++; // 9801
+				debugY++; 
 			}
 		}
 	}
 
-	std::cout << debugX << ", " << debugY << std::endl;
-
 	// Generates material and actual terrain
 	Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 3, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
-
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
@@ -199,43 +191,34 @@ int main() {
 			);																
 			
 		// Scenegraph called node
-		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), objectPos));
+		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), objectPos));					// Primary node
+		auto deerNode = std::make_unique<Scenegraph::GroupNode>(									// Node of deer
+			glm::translate(
+			glm::rotate(
+				glm::scale(
+					glm::mat4x4(1.f),				// Identity matrix
+					glm::vec3(40.0f, 40.0f, 40.0f)	// Scale
+				),
+				(float)(90.f * M_PI / 180.f),		// Angle to rotate
+				glm::vec3(0, 1, 0)					// Axis to rotate around
+			),
+			glm::vec3(1, 1, 1)						// Offset/Coordinates
+			));	
 
 		 // Render the terrain
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(terrainGeometry, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix
 			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
 		)));
-		
 
-		// Order: transformation, Rotation, Scale
-		node.addNode(std::make_unique<Scenegraph::GeometryNode>(
-			deerModel,
-			glm::translate(
-				glm::rotate(
-					glm::scale(
-						glm::mat4x4(1.f),				// Identity matrix
-						glm::vec3(40.0f, 40.0f, 40.0f)	// Scale
-					), 
-					(float)(90.f * M_PI / 180.f),		// Angle to rotate
-					glm::vec3(0, 1, 0)					// Axis to rotate around
-				), 
-				glm::vec3(1, 1, 1)						// Offset/Coordinates
-			)
-			)); 
+		// Three deer models
+		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerHead, glm::mat4x4(1.f)));
+		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerEye, glm::mat4x4(1.f)));
+		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerBody, glm::mat4x4(1.f)));
 
-		// group
-		// When moving node into other node, do whatever you want with it before moving it into another group, as it becoems invalid afterwards
+		node.addNode(std::move(deerNode)); // move because it is put into a variable first
 
-		// Scenegraph::GroupNode node2(glm::translate(glm::mat4x4(1.f), objectPos)); // This becoems the line below
-		// auto node2 = std::make_unique<Scenegraph::GroupNode>(glm::translate(glm::mat4x4(1.f), objectPos));
-		// node.addNode(std::move(node2)); // move because it is put into a variable first
-		// node.addNode(std::make_unique<Scenegraph::GroupNode>(glm::translate(glm::mat4x4(1.f), objectPos))); // This would also work
-		
-
-		// x, z is the horizontal plane, y is the vertical
-
-		// Camera
+		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
 			glm::vec3(0, 100, 500),																// pos
 			angleToObject,																		// forward
