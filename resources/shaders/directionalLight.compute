@@ -1,0 +1,62 @@
+layout(local_size_x = 8, local_size_y = 8) in;
+
+layout(rgba32f, binding=0) uniform image2D litMap;
+
+layout(rgba32f, binding=1) uniform readonly image2D albedoMetallicMap;
+layout(rgba32f, binding=2) uniform readonly image2D normalRoughnessMap;
+layout(rgba32f, binding=3) uniform readonly image2D worldPosMap;
+
+uniform vec3 lightDirection;
+uniform vec3 lightColor;
+uniform float lightAmbient;
+
+uniform bool useShadowMap;
+uniform mat4 shadowMapViewProj;
+uniform sampler2D shadowMap;
+
+void main() {
+    ivec2 texturePos = ivec2(gl_GlobalInvocationID.xy);
+    vec4 albedoMetallic = imageLoad(albedoMetallicMap, texturePos);
+    vec4 normalRoughness = imageLoad(normalRoughnessMap, texturePos);
+    vec4 worldPos = imageLoad(worldPosMap, texturePos);
+
+    // Skip the sky
+    if (worldPos.a == 0.) {
+        return;
+    }
+
+    float lightIntensity = 1.;
+    if (useShadowMap) {
+        // Convert our world position into shadow map texture space
+        vec4 shadowCoord = shadowMapViewProj * vec4(worldPos.xyz, 1.);
+        vec3 normalShadowCoord = shadowCoord.xyz / shadowCoord.w;
+        float shadowMapDepth = texture(shadowMap, normalShadowCoord.xy * 0.5 + 0.5).x;
+
+        // Apply a small bias to avoid 'freckles' based on the light and surface direction
+        float bias = max(0.0001 * (1. - dot(normalRoughness.xyz, lightDirection)), 0.0001);
+
+        // The surface is in shadow if shadowMapDepth < normalShadowCoord.z
+        lightIntensity = step(shadowMapDepth, normalShadowCoord.z + bias);
+
+        // If the read was outside the shadow map, we should be fully lit
+        vec2 wasInside = step(vec2(-1.), normalShadowCoord.xy) * step(normalShadowCoord.xy, vec2(1.));
+        lightIntensity = mix(1., lightIntensity, wasInside.x * wasInside.y);
+    }
+
+    vec3 v = normalize(camera.position.xyz - worldPos.xyz);
+    vec3 computedColor = getLightRadiance(
+        normalRoughness.xyz, // normal
+        albedoMetallic.rgb, // albedo
+        albedoMetallic.a, // metallic
+        normalRoughness.a, // roughness
+        worldPos.xyz, // worldPos
+        v,
+        lightDirection
+    );
+    computedColor *= lightIntensity; // apply shadows
+    computedColor += albedoMetallic.rgb * lightAmbient; // add ambient light
+    computedColor *= lightColor.rgb; // apply light colour
+
+    vec4 addedColor = imageLoad(litMap, texturePos) + vec4(computedColor, 0.);
+    imageStore(litMap, texturePos, addedColor);
+}

@@ -1,0 +1,65 @@
+layout(local_size_x = 8, local_size_y = 8) in;
+
+layout(rgba32f, binding=0) uniform image2D litMap;
+
+layout(rgba32f, binding=1) uniform readonly image2D albedoMetallicMap;
+layout(rgba32f, binding=2) uniform readonly image2D normalRoughnessMap;
+layout(rgba32f, binding=3) uniform readonly image2D worldPosMap;
+
+uniform vec3 lightPosition;
+uniform vec3 lightDirection;
+uniform vec3 lightColor;
+uniform float lightCutoffAngle;
+uniform float lightFocus;
+uniform float lightAmbient;
+uniform float lightB;
+uniform float lightFalloff;
+uniform float lightMaxRadius;
+
+void main() {
+    ivec2 texturePos = ivec2(gl_GlobalInvocationID.xy);
+    vec4 worldPos = imageLoad(worldPosMap, texturePos);
+
+    // Skip the sky
+    if (worldPos.a == 0.) {
+        return;
+    }
+
+    float dist = distance(worldPos.xyz, lightPosition);
+
+    // Skip pixels outside the light's radius
+    if (dist > lightMaxRadius) {
+        return;
+    }
+
+    float attenuation =  1. / (1. + lightFalloff * dist + lightB * dist * dist);
+    attenuation *= 1. - smoothstep(lightMaxRadius * 0.9, lightMaxRadius, dist);
+
+    vec3 l = normalize(lightPosition - worldPos.xyz);
+    float angle = acos(dot(l, lightDirection));
+    // Remap angle so lightCutoffAngle becomes 0 and 0 becomes 1
+    float normalizedAngle = 1. - angle / lightCutoffAngle;
+    float spotIntensity = clamp(normalizedAngle * lightFocus, 0., 1.);
+
+    vec4 albedoMetallic = imageLoad(albedoMetallicMap, texturePos);
+    vec4 normalRoughness = imageLoad(normalRoughnessMap, texturePos);
+
+    vec3 v = normalize(camera.position.xyz - worldPos.xyz);
+    vec3 computedColor = getLightRadiance(
+        normalRoughness.xyz, // normal
+        albedoMetallic.rgb, // albedo
+        albedoMetallic.a, // metallic
+        normalRoughness.a, // roughness
+        worldPos.xyz, // worldPos
+        v,
+        normalize(lightPosition - worldPos.xyz)
+    );
+    computedColor *= attenuation; // apply distance attenuation
+    computedColor *= spotIntensity; // apply spot attenuation
+    computedColor += albedoMetallic.rgb * lightAmbient; // add ambient light
+    computedColor *= lightColor.rgb; // apply light colour
+    computedColor = max(vec3(0), computedColor);
+
+    vec4 addedColor = imageLoad(litMap, texturePos) + vec4(computedColor, 0.);
+    imageStore(litMap, texturePos, addedColor);
+}

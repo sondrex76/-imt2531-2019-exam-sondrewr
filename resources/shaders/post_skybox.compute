@@ -1,0 +1,37 @@
+layout(local_size_x = 8, local_size_y = 8) in;
+
+layout(rgba32f, binding=0) uniform image2D litMap;
+
+uniform vec2 viewportSize;
+
+void main() {
+    ivec2 texturePos = ivec2(gl_GlobalInvocationID.xy);
+    float effectMask = imageLoad(litMap, texturePos).w;
+
+    // effectMask = 0 for sky
+    if (effectMask != 0.) {
+        return;
+    }
+
+    // Determine the view direction by converting texturePos into a clip-space position and using
+    // the inverse view-projection matrix
+    vec2 clipPos = vec2(texturePos) / viewportSize * 2 - 1;
+    vec4 projectedPos = camera.invViewProjMatrix * vec4(clipPos, 0.001, 1);
+    projectedPos /= projectedPos.w;
+    vec3 d = normalize(projectedPos.xyz - camera.position);
+
+    float blinds = step(0.008, mod(d.y, 0.01));
+
+    vec3 skyColor = mix(vec3(1, 0, 1), vec3(0, 0, 1), pow(clamp(d.y*20. + 0.3, 0., 1.), 0.5));
+
+    float sunBrightness = step(0.99, dot(d, vec3(0, 0, 1))) * blinds;
+    vec3 sunColor = mix(
+        vec3(1., 0., 0.),
+        vec3(1., 1., 0.),
+        pow(clamp(d.y*20. + 0.3, 0., 1.), 2.)
+    );
+
+    skyColor = mix(skyColor, sunColor, sunBrightness);
+
+    imageStore(litMap, texturePos, vec4(skyColor, 0.));
+}

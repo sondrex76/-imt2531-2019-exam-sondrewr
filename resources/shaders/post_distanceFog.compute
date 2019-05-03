@@ -1,0 +1,24 @@
+layout(local_size_x = 8, local_size_y = 8) in;
+
+layout(rgba32f, binding=0) uniform image2D litMap;
+layout(rgba32f, binding=3) uniform readonly image2D worldPosMap;
+
+const float FOG_ATTENUATION = 0.00005;
+const vec4 FOG_COLOR = vec4(1, 0, 1, 1);
+
+void main() {
+    ivec2 texturePos = ivec2(gl_GlobalInvocationID.xy);
+    vec4 inColor = imageLoad(litMap, texturePos);
+
+    // Don't apply fog to sky
+    if (inColor.w == 0.) {
+        return;
+    }
+
+    float worldDepth = imageLoad(worldPosMap, texturePos).w;
+
+    // Based on http://in2gpu.com/2014/07/22/create-fog-shader/
+    float t = worldDepth * FOG_ATTENUATION;
+    float fogAmount = 1. / exp(t*t);
+    imageStore(litMap, texturePos, mix(FOG_COLOR, inColor, fogAmount));
+}

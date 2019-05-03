@@ -1,0 +1,20 @@
+layout(local_size_x = 8, local_size_y = 8) in;
+
+layout(rgba32f, binding=0) uniform readonly image2D sourceMap;
+layout(rgba32f, binding=1) uniform writeonly image2D destMap;
+
+const float weights[7] = {0.00598, 0.060626, 0.241843, 0.383103, 0.241843, 0.060626, 0.00598};
+
+uniform ivec2 direction;
+
+void main() {
+    ivec2 texturePos = ivec2(gl_GlobalInvocationID.xy);
+
+    vec3 accumulated = vec3(0);
+    for (int i = -3; i <= 3; i++) {
+        ivec2 offsetPos = texturePos + i * direction;
+        accumulated += imageLoad(sourceMap, offsetPos).rgb * weights[i + 3];
+    }
+
+    imageStore(destMap, texturePos, vec4(accumulated, 0));
+}

@@ -1,0 +1,30 @@
+layout(local_size_x = 8, local_size_y = 8) in;
+
+layout(rgba32f, binding=0) uniform image2D litMap;
+
+const float exposure = 8.;
+const float A = 0.15;
+const float B = 0.50;
+const float C = 0.10;
+const float D = 0.20;
+const float E = 0.02;
+const float F = 0.30;
+const float W = 11.2;
+
+vec3 tonemap(vec3 x) {
+    return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
+
+void main() {
+    ivec2 texturePos = ivec2(gl_GlobalInvocationID.xy);
+    vec3 inColor = imageLoad(litMap, texturePos).rgb;
+
+    // tonemapping
+    vec3 curr = tonemap(inColor * exposure);
+    vec3 whiteScale = 1. / tonemap(vec3(W));
+    vec3 tonemappedColor = clamp(curr * whiteScale, vec3(0.), vec3(1.));
+
+    // gamma correct
+    vec3 correctedColor = pow(tonemappedColor, vec3(1. / 2.2));
+    imageStore(litMap, texturePos, vec4(correctedColor, 1.));
+}
