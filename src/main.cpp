@@ -266,22 +266,34 @@ int main() {
 
 		node.addNode(std::move(deerNode)); // move because it is put into a variable first
 		
+		float angleDown = (float)((ypos - previousMousePosY) * SENSITIVITY);
+		if (angleDown < -MAX_ANGLE_VERTICAL)
+			angleDown = -MAX_ANGLE_VERTICAL;
+		else if (angleDown > MAX_ANGLE_VERTICAL)
+			angleDown = MAX_ANGLE_VERTICAL;
+
 		// Angle towards object
-		glm::vec4 angleToObject = glm::normalize(
+		glm::vec4 angle = glm::normalize(
 			glm::vec4(cameraPos, 0)) * 
 			glm::rotate(
 				glm::mat4x4(1.f),																	// Identify matrix
 				//0.0f,																				// Angle to rotate
-				cameraPosX + (float)((previousMousePosX - xpos) * SENSITIVITY),						// Comment out the above and uncomment this to rotate camera around car again
+				(float)((previousMousePosX - xpos) * SENSITIVITY),						// Comment out the above and uncomment this to rotate camera around car again
 				glm::vec3(0, 1, 0)																	// Defines the up direction
+			) *
+			glm::rotate(
+				glm::mat4x4(1.f),																	// Identify matrix
+				//0.0f,																				// Angle to rotate
+				angleDown,						// Comment out the above and uncomment this to rotate camera around car again
+				glm::vec3(0.5, 0, 0.5)																	// Defines the up direction
 			);
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
 			glm::vec3(0, 100, 500),																// pos
-			angleToObject,																		// forward
+			angle,																				// forward
 			glm::vec3(0., 1., 0.),                     											// up
-			45.f * M_PI / 180.f,                                      							// fov
+			60.f * M_PI / 180.f,                                      							// fov
 			(float)windowWidth / (float)windowHeight, 											// aspect
 			0.01f,                                     											// near z
 			20000.f                                     										// far z

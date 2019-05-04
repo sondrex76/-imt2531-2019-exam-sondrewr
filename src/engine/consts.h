@@ -13,6 +13,7 @@ const float SIZE_TERRAIN = 2.0f;							// The size of triangles
 const float HEIGHT_TERRAIN = 0.5f;							// Height of terrain per level
 const float MAX_HEIGHT = 257;								// Maximum height
 const float SENSITIVITY = 0.005;							// Camera sensitivity
+const float MAX_ANGLE_VERTICAL = 0.75f;						// Max angle down and up
 
 const float HEIGHT_STAGES[] = {								// Height stages(multiplies of max height)
 	0.02,
