@@ -37,8 +37,18 @@ Snowflake::Snowflake(glm::vec3 coordinates, glm::vec3 rotation) {
 }
 
 void Snowflake::moveSnowflake(double time) {
-	glm::mat4x4 mult = glm::rotate(glm::mat4x4(1.f), (float)(90.f * M_PI / 180.f), glm::vec3(1, 0, 0));
+	glm::mat4x4 mult = glm::rotate(
+		glm::rotate(
+			glm::rotate(
+				glm::mat4x4(1.f),
+				(float)(rotationSpeed.x * M_PI / 180.f * SPEED_SNOWFLAKE), glm::vec3(1, 0, 0)
+			),
+			(float)(rotationSpeed.y * M_PI / 180.f * SPEED_SNOWFLAKE), glm::vec3(0, 1, 0)
+		),
+		(float)(rotationSpeed.z * M_PI / 180.f * SPEED_SNOWFLAKE), glm::vec3(0, 0, 1));
 
 	cords[0] = glm::vec4(cords[0], 0) * mult;
-	// SPEED_SNOWFLAKE
+	cords[1] = glm::vec4(cords[1], 0) * mult;
+	cords[2] = glm::vec4(cords[2], 0) * mult;
+	cords[3] = glm::vec4(cords[3], 0) * mult;
 }
