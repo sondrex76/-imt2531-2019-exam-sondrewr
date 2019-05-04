@@ -278,14 +278,14 @@ int main() {
 			glm::rotate(
 				glm::mat4x4(1.f),																	// Identify matrix
 				//0.0f,																				// Angle to rotate
-				(float)((previousMousePosX - xpos) * SENSITIVITY),						// Comment out the above and uncomment this to rotate camera around car again
-				glm::vec3(0, 1, 0)																	// Defines the up direction
+				angleDown,						// Comment out the above and uncomment this to rotate camera around car again
+				glm::vec3(0.5, 0, 0.5)																	// Defines the up direction
 			) *
 			glm::rotate(
 				glm::mat4x4(1.f),																	// Identify matrix
 				//0.0f,																				// Angle to rotate
-				angleDown,						// Comment out the above and uncomment this to rotate camera around car again
-				glm::vec3(0.5, 0, 0.5)																	// Defines the up direction
+				(float)((previousMousePosX - xpos) * SENSITIVITY),						// Comment out the above and uncomment this to rotate camera around car again
+				glm::vec3(0, 1, 0)																	// Defines the up direction
 			);
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
