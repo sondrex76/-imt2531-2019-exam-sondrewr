@@ -192,16 +192,14 @@ int main() {
 		}
 	}
 
-	// Attempt to render textures
-	// TEST
-	Renderer::ImageTexture stuff1(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
+	// renders ground texture
+	Renderer::ImageTexture textures(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
 
 	// fromFile on the diffuse, and fromColor on all the other ones
 	// Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), std::move(stuff2), std::move(stuff3), std::move(stuff4))); // OLD
-	Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), glm::vec3(0.5, 0.5, 0.5), 32.0f, glm::vec3(0, 0, 0)));
+	Renderer::Material terrainMaterial(Renderer::Material(std::move(textures), glm::vec3(0.3, 0.3, 0.3), 16.0f, glm::vec3(0, 0, 0)));
 
 	// Generates material and actual terrain
-	// Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
 	// Game loop
@@ -209,19 +207,23 @@ int main() {
 		int windowWidth, windowHeight;
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
-		// MousePos, could be useful for exam
+		// MousePos, gets mouse x and y pos
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
-		previousMousePosX = xpos, previousMousePosY = ypos; // Updates values
 
-		// Movement detection
+		std::cout << xpos << ", " << ypos << std::endl;
+
+		// Movement forwards, backwards
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
-
-		} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {	// A key, move left
 
 		}
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
-			
+
+		}
+		
+		// Movement left, right
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {	// A key, move left
+
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
 
@@ -230,16 +232,6 @@ int main() {
 		// x, y, z coordinates of camera and object
 		glm::vec3 cameraPos = glm::vec3(0, 0., 500.);
 		glm::vec3 objectPos = glm::vec3(0, 0, 0);		// Node position, changing this changes locaiton both of the object and of the camera
-
-		// Angle towards car
-		glm::vec4 angleToObject = glm::normalize(
-			glm::vec4(cameraPos, 0)) * 
-			glm::rotate(
-				glm::mat4x4(1.f),																	// Identify matrix
-				//0.0f,																				// Angle to rotate
-				(float)((ypos - previousMousePosX) / 200.0f),										// Comment out the above and uncomment this to rotate camera around car again
-				glm::vec3(0, 1, 0)																	// Defines the up direction
-			);																
 			
 		// Scenegraph called node
 		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), objectPos));					// Primary node
@@ -268,6 +260,16 @@ int main() {
 		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerBody, glm::mat4x4(1.f)));
 
 		node.addNode(std::move(deerNode)); // move because it is put into a variable first
+		
+		// Angle towards object
+		glm::vec4 angleToObject = glm::normalize(
+			glm::vec4(cameraPos, 0)) * 
+			glm::rotate(
+				glm::mat4x4(1.f),																	// Identify matrix
+				//0.0f,																				// Angle to rotate
+				(float)((ypos - previousMousePosY) / 200.0f),										// Comment out the above and uncomment this to rotate camera around car again
+				glm::vec3(0, 1, 0)																	// Defines the up direction
+			);
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
@@ -295,6 +297,9 @@ int main() {
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		// Updates coordinates
+		previousMousePosX = xpos, previousMousePosY = ypos; // Updates values
 	}
 
 	glfwDestroyWindow(window);

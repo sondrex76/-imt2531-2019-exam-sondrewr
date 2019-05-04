@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
 
 # Set the project name to be the name of the folder that holds the source code
 get_filename_component(PROJECT ${CMAKE_SOURCE_DIR} NAME)
-project(graphics2racing)
+project(Exam-imt2531-2019)
 
 # Aliases
 set(ROOT   ${CMAKE_SOURCE_DIR})
