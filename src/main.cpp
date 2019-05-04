@@ -89,9 +89,6 @@ int main() {
 	// Sound
 	// PlaySound("resources/Sound/<name of file>.wav", NULL, SND_LOOP | SND_ASYNC);
 
-	// Mouse pos
-	float previousMousePosX, previousMousePosY; // Previous mosePos
-
 	// TimePassedValue, used to keep track of the position of the sun, the usn will likely gain its own class and this will be moved
 	float timePassedValue = 0;
 
@@ -202,6 +199,11 @@ int main() {
 	// Generates material and actual terrain
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
+
+	// Mouse pos
+	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
+	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
+
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
 		int windowWidth, windowHeight;
@@ -211,7 +213,10 @@ int main() {
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
 
-		std::cout << xpos << ", " << ypos << std::endl;
+		if (!previousMousePosX)
+			previousMousePosX = xpos;
+		if (!previousMousePosY)
+			previousMousePosY = ypos;
 
 		// Movement forwards, backwards
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
@@ -267,7 +272,7 @@ int main() {
 			glm::rotate(
 				glm::mat4x4(1.f),																	// Identify matrix
 				//0.0f,																				// Angle to rotate
-				(float)((ypos - previousMousePosY) / 200.0f),										// Comment out the above and uncomment this to rotate camera around car again
+				cameraPosX + (float)((previousMousePosX - xpos) * SENSITIVITY),						// Comment out the above and uncomment this to rotate camera around car again
 				glm::vec3(0, 1, 0)																	// Defines the up direction
 			);
 
@@ -298,8 +303,9 @@ int main() {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		// Updates coordinates
-		previousMousePosX = xpos, previousMousePosY = ypos; // Updates values
+		// Updates mouse Pos coordinates
+		// previousMousePosX = xpos;
+		// previousMousePosY = ypos; 
 	}
 
 	glfwDestroyWindow(window);
