@@ -84,9 +84,7 @@ int main() {
 	Renderer::RenderContext renderContext;
 
 	// Models
-	Renderer::Model deerEye = Renderer::Model::fromObjFile("deerEyes/deer.obj", renderContext);
-	Renderer::Model deerHead = Renderer::Model::fromObjFile("deerHead/deer.obj", renderContext);
-	Renderer::Model deerBody = Renderer::Model::fromObjFile("deerBody/deer.obj", renderContext);
+	Renderer::Model deer = Renderer::Model::fromObjFile("deer/deer.obj", renderContext);
 
 	// Sound
 	// PlaySound("resources/Sound/<name of file>.wav", NULL, SND_LOOP | SND_ASYNC);
@@ -287,10 +285,8 @@ int main() {
 			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
 		)));
 
-		// Three deer models
-		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerHead, glm::mat4x4(1.f)));
-		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerEye, glm::mat4x4(1.f)));
-		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerBody, glm::mat4x4(1.f)));
+		// Deer model, it is in its own node because previouly it was split into three models
+		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deer, glm::mat4x4(1.f)));
 
 		node.addNode(std::move(deerNode));
 		

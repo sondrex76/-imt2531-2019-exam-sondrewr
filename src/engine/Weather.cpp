@@ -23,6 +23,8 @@ Renderer::Model Snowflake::returnSnowflake(std::vector<Renderer::Vertex>& vertic
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[4]}, /*norm*/normal, /*uv*/{0, 0} });
 
 	Renderer::Model snowflakeModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(snowflakeMaterial), renderContext);
+
+	return snowflakeModel;
 }
 
 
