@@ -207,13 +207,9 @@ int main() {
 	for (int i = 0; i < 12; i++)	// Goes through the four triangles
 		indices.push_back(numIndices++);
 
-
 	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
 	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.01, 0.01, 0.01), 32.0f, glm::vec3(0, 0, 0)));
-
-
-	vertices.push_back(Renderer::Vertex{ /*pos*/{glm::vec3(, ,)}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
-	Renderer::Model snowflakeModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
+	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n); // Remove element at position n
 
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
