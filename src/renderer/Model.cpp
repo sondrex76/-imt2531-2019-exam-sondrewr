@@ -99,6 +99,5 @@ void Model::render(glm::mat4x4 transform, ExtraMaterial extraMaterial) const {
 
     for (const auto &mesh : m_meshes) {
         mesh.render();
-        break;
     }
 }

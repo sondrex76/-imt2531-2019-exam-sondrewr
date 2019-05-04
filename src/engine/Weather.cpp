@@ -33,3 +33,10 @@ Snowflake::Snowflake(glm::vec3 coordinates, glm::vec3 rotation) {
 	cords[2] = coordinates + glm::vec3(0, SIZE_SNOWFLAKE, 0);
 	cords[3] = coordinates + glm::vec3(SIZE_SNOWFLAKE), SIZE_SNOWFLAKE, 0;
 }
+
+void Snowflake::moveSnowflake(double time) {
+	glm::mat4x4 mult = glm::rotate(glm::mat4x4(1.f), (float)(90.f * M_PI / 180.f), glm::vec3(1, 0, 0));
+
+	cords[0] = glm::vec4(cords[0], 0) * mult;
+	// SPEED_SNOWFLAKE
+}

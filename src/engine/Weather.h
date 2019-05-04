@@ -2,6 +2,9 @@
 #include "../renderer//Model.h"
 #include "Functions.h"
 #include "consts.h"
+#include <glm/ext/matrix_transform.hpp>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 class Snowflake {
 private:
@@ -12,5 +15,6 @@ public:
 		std::vector<uint32_t>& indices,											// Indices
 		Renderer::Material& snowflakeMaterial,									// Material
 		Renderer::RenderContext& renderContext);								// Render context
-	Snowflake(glm::vec3 loc, glm::vec3 rotation);					// Constructor for snowflake
+	Snowflake(glm::vec3 loc, glm::vec3 rotation);								// Constructor for snowflake
+	void moveSnowflake(double time);											// Moves snowflake based on amount of time
 };
