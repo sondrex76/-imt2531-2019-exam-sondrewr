@@ -201,7 +201,7 @@ int main() {
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
 	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
-	glm::vec3 CameraCordsOffset(0, 0, 0);				// Camera offset in coordinates
+	glm::vec3 CameraCordsOffset(0, 100, 500);				// Camera offset in coordinates
 
 	// imGui static
 	menuStatic(*window);
@@ -302,7 +302,7 @@ int main() {
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
-			glm::vec3(0, 100, 500),																// pos
+			CameraCordsOffset,																// pos
 			angle,																				// forward
 			glm::vec3(0., 1., 0.),                     											// up
 			60.f * M_PI / 180.f,                                      							// fov

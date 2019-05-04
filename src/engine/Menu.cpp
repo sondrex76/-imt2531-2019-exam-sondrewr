@@ -91,24 +91,30 @@ void menuDynamic() {
 void updateCords(glm::vec3& CameraCordsOffset) {
 	extern bool moving[6];
 	
-	// is in an if else since only one can be true at a time and valeus ais in an array
-	if (moving[0]) {
-		
+	// is in an if else since only one can be true at a time and values is in an array
+	if (moving[0]) {		// left
+		CameraCordsOffset.x -= MOVEMENT_SPEED;
+		moving[0] = false;
 	}
-	else if (moving[1]) {
-
+	else if (moving[1]) {	// right
+		CameraCordsOffset.x += MOVEMENT_SPEED;
+		moving[1] = false;
 	}
-	else if (moving[2]) {
-
+	else if (moving[2]) {	// Forward
+		CameraCordsOffset.z += MOVEMENT_SPEED;
+		moving[2] = false;
 	}
-	else if (moving[3]) {
-	
+	else if (moving[3]) {	// Backward
+		CameraCordsOffset.z -= MOVEMENT_SPEED;
+		moving[3] = false;
 	}
-	else if (moving[4]) {
-
+	else if (moving[4]) {	// Up
+		CameraCordsOffset.y += MOVEMENT_SPEED;
+		moving[4] = false;
 	}
-	else if (moving[5]) {
-
+	else if (moving[5]) {	// Down
+		CameraCordsOffset.y -= MOVEMENT_SPEED;
+		moving[5] = false;
 	}
 
 	// Display cords
