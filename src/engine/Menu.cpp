@@ -12,6 +12,17 @@ void menuStatic(GLFWwindow& window) {
 	ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
+ImGuiWindowFlags runFlags() {
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoTitleBar;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+	window_flags |= ImGuiWindowFlags_NoScrollbar;
+	window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_NoBackground;
+
+	return window_flags;
+}
+
 // All dynamic imGui code
 void menuDynamic() {
 	ImGui_ImplOpenGL3_NewFrame();
@@ -20,13 +31,7 @@ void menuDynamic() {
 
 	bool run = true;
 	extern bool moving[6];
-
-	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoTitleBar;
-	window_flags |= ImGuiWindowFlags_NoCollapse;
-	window_flags |= ImGuiWindowFlags_NoScrollbar;
-	window_flags |= ImGuiWindowFlags_NoResize;
-	window_flags |= ImGuiWindowFlags_NoBackground;
+	ImGuiWindowFlags window_flags = runFlags();
 
 	// left
 	ImGui::SetNextWindowPos(ImVec2(PADDING, PADDING));
@@ -81,4 +86,41 @@ void menuDynamic() {
 
 		ImGui::End();
 	}
+}
+
+void updateCords(glm::vec3& CameraCordsOffset) {
+	extern bool moving[6];
+	
+	// is in an if else since only one can be true at a time and valeus ais in an array
+	if (moving[0]) {
+		
+	}
+	else if (moving[1]) {
+
+	}
+	else if (moving[2]) {
+
+	}
+	else if (moving[3]) {
+	
+	}
+	else if (moving[4]) {
+
+	}
+	else if (moving[5]) {
+
+	}
+
+	// Display cords
+	ImGuiWindowFlags window_flags = runFlags();
+	ImGui::SetNextWindowPos(ImVec2(BUTTON_SIZE + PADDING, PADDING));
+	ImGui::SetNextWindowSize(ImVec2(450, 60));
+	{
+		ImGui::Begin("ButtonsUpDown", nullptr, window_flags);
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Coordinates x: %d, y: %d, z: %d", CameraCordsOffset.x, CameraCordsOffset.y, CameraCordsOffset.z);
+
+		ImGui::End();
+	}
+
 }

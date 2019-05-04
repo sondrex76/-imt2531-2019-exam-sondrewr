@@ -11,5 +11,7 @@
 
 #include "consts.h"
 
-void menuStatic(GLFWwindow& window);	// Runs static imGui code
-void menuDynamic();						// Runs dynamic imGui code
+void menuStatic(GLFWwindow& window);			// Runs static imGui code
+ImGuiWindowFlags runFlags();					// Runs flags
+void menuDynamic();								// Runs dynamic imGui code
+void updateCords(glm::vec3& CameraCordsOffset);	// Updates coordinates based on 

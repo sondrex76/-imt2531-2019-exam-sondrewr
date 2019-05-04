@@ -91,9 +91,6 @@ int main() {
 	// Sound
 	// PlaySound("resources/Sound/<name of file>.wav", NULL, SND_LOOP | SND_ASYNC);
 
-	// TimePassedValue, used to keep track of the position of the sun, the usn will likely gain its own class and this will be moved
-	float timePassedValue = 0;
-
 	// Sun
 	Renderer::ShadowDirectionalLight sunLight(
 		Renderer::DirectionalLight(
@@ -204,43 +201,24 @@ int main() {
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
 	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
+	glm::vec3 CameraCordsOffset(0, 0, 0);				// Camera offset in coordinates
+
 	// imGui static
 	menuStatic(*window);
-	/*
-	const char* glsl_version = "#version 330";
 
-	// IMGUI static
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui::StyleColorsDark();
-	ImGui_ImplOpenGL3_Init(glsl_version);
-	*/
+	// time
+	std::chrono::milliseconds ms;
+
+	ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+
+	float oldTime = 0, newTime;
+
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
-		menuDynamic();	// dynamic imGUI
-		/*
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		bool run = true;
-
-		ImGuiWindowFlags window_flags = 0;
-		window_flags |= ImGuiWindowFlags_NoTitleBar;
-		window_flags |= ImGuiWindowFlags_NoCollapse;
-		window_flags |= ImGuiWindowFlags_NoScrollbar;
-		window_flags |= ImGuiWindowFlags_NoResize;
-		// window_flags |= ImGuiWindowFlags_NoBackground;
-		ImGui::SetNextWindowPos(ImVec2(20, 20));
-		ImGui::SetNextWindowSize(ImVec2(450, 60));
-		{
-			ImGui::Begin("TEST", &run, window_flags);
-			ImGui::SetWindowFontScale(3.0f);
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "TEST: %d", 1);
-			ImGui::End();
-		}*/
+		menuDynamic();					// dynamic imGUI
+		updateCords(CameraCordsOffset);	// Updates coordinates
 
 		int windowWidth, windowHeight;
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
