@@ -172,25 +172,28 @@ int main() {
 				// Normal values
 				glm::vec3 normal1 = getNormals(vectors[0], vectors[1], vectors[2]), normal2 = getNormals(vectors[3], vectors[4], vectors[5]);
 
+				float height = getHeight(vectors[0], vectors[1], vectors[2]);
+				glm::vec2 uvOffset = textureOffset(height);						// uv offset
+
 				// Upper/right triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0, 0} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0, 1} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{1, 1} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0.24 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.25 + uvOffset.x, 0.24 + uvOffset.y} });
 				
 				// Lower/left triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0, 0} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0, 1} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{1, 1} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0.24 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.25 + uvOffset.x, 0.24 + uvOffset.y} });
 			}
 		}
 	}
 
 	// Attempt to render textures
 	// TEST
-	Renderer::ImageTexture stuff1(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
-	Renderer::ImageTexture stuff2(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
-	Renderer::ImageTexture stuff3(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
-	Renderer::ImageTexture stuff4(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
+	Renderer::ImageTexture stuff1(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
+	Renderer::ImageTexture stuff2(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
+	Renderer::ImageTexture stuff3(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
+	Renderer::ImageTexture stuff4(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
 
 	Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), std::move(stuff2), std::move(stuff3), std::move(stuff4)));
 

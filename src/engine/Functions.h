@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../renderer/RenderContext.h"
+#include "consts.h"
+// Class with general functions
 
-// Returns normal of triangle
-glm::vec3 getNormals(glm::vec3 x, glm::vec3 y, glm::vec3 z);
+glm::vec3 getNormals(glm::vec3 x, glm::vec3 y, glm::vec3 z);	// Returns the normal of the triangle
+float getHeight(glm::vec3 x, glm::vec3 y, glm::vec3 z);			// Returns averege height of vertex
+glm::vec2 textureOffset(float height);							// Returns the texture offset based on height
