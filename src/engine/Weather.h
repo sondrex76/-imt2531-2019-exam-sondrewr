@@ -5,12 +5,12 @@
 
 class Snowflake {
 private:
-	glm::vec3 location;
-	glm::vec3 direction1, direction2;	// Directions of snowflake, must be 90 degrees compared to each other
+	glm::vec3 rotationSpeed;	// Rotation speed per axis
+	glm::vec3 cords[4];			// Coordinates
 public:
 	Renderer::Model returnSnowflake(std::vector<Renderer::Vertex>& vertices,	// Returns model of snowflake
 		std::vector<uint32_t>& indices,											// Indices
 		Renderer::Material& snowflakeMaterial,									// Material
 		Renderer::RenderContext& renderContext);								// Render context
-	Snowflake(glm::vec3 loc, glm::vec3 dir1, glm::vec3 dir2);					// Constructor for snowflake
+	Snowflake(glm::vec3 loc, glm::vec3 rotation);					// Constructor for snowflake
 };

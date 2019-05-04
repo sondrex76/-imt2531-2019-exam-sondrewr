@@ -2,12 +2,6 @@
 
 // Returns model of snowflake with correct normals
 Renderer::Model Snowflake::returnSnowflake(std::vector<Renderer::Vertex>& vertices, std::vector<uint32_t>& indices, Renderer::Material& snowflakeMaterial, Renderer::RenderContext& renderContext) {
-	glm::vec3 cords[4] = {
-		location, 
-		location + direction1 * SIZE_SNOWFLAKE, 
-		location + direction2 * SIZE_SNOWFLAKE,
-		location + direction2 * SIZE_SNOWFLAKE + direction1 * SIZE_SNOWFLAKE};
-
 	glm::vec3 normal = getNormals(cords[0], cords[1], cords[4]); // Normal for side 2
 
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
@@ -32,8 +26,10 @@ Renderer::Model Snowflake::returnSnowflake(std::vector<Renderer::Vertex>& vertic
 }
 
 
-Snowflake::Snowflake(glm::vec3 loc, glm::vec3 dir1, glm::vec3 dir2) {
-	location = loc;
-	direction1 = glm::normalize(dir1);
-	direction2 = glm::normalize(dir2);
+Snowflake::Snowflake(glm::vec3 coordinates, glm::vec3 rotation) {
+	rotationSpeed = rotation;
+	cords[0] = coordinates;
+	cords[1] = coordinates + glm::vec3(SIZE_SNOWFLAKE, 0, 0);
+	cords[2] = coordinates + glm::vec3(0, SIZE_SNOWFLAKE, 0);
+	cords[3] = coordinates + glm::vec3(SIZE_SNOWFLAKE), SIZE_SNOWFLAKE, 0;
 }
