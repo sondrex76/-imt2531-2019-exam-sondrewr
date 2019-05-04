@@ -193,7 +193,7 @@ int main() {
 
 	// fromFile on the diffuse, and fromColor on all the other ones
 	// Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), std::move(stuff2), std::move(stuff3), std::move(stuff4))); // OLD
-	Renderer::Material terrainMaterial(Renderer::Material(std::move(textures), glm::vec3(0.3, 0.3, 0.3), 16.0f, glm::vec3(0, 0, 0)));
+	Renderer::Material terrainMaterial(Renderer::Material(std::move(textures), glm::vec3(0.01, 0.01, 0.01), 32.0f, glm::vec3(0, 0, 0)));
 
 	// Generates material and actual terrain
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
