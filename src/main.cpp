@@ -98,8 +98,8 @@ int main() {
 	// Sun
 	Renderer::ShadowDirectionalLight sunLight(
 		Renderer::DirectionalLight(
-			glm::normalize(glm::vec3(0, 0.5, 1)),
-			glm::vec3(2, 2, 0.1),
+			glm::normalize(glm::vec3(0, 0.5, 1)),	// Direction
+			SUN_LIGHT_COLOR,					// Color
 			0,
 			renderContext
 		),
@@ -195,11 +195,10 @@ int main() {
 	// Attempt to render textures
 	// TEST
 	Renderer::ImageTexture stuff1(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
-	Renderer::ImageTexture stuff2(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
-	Renderer::ImageTexture stuff3(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
-	Renderer::ImageTexture stuff4(Renderer::ImageTexture::fromFile("resources/Textures/Ground.png"));
 
-	Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), std::move(stuff2), std::move(stuff3), std::move(stuff4)));
+	// fromFile on the diffuse, and fromColor on all the other ones
+	// Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), std::move(stuff2), std::move(stuff3), std::move(stuff4))); // OLD
+	Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), glm::vec3(0.5, 0.5, 0.5), 32.0f, glm::vec3(0, 0, 0)));
 
 	// Generates material and actual terrain
 	// Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
@@ -281,11 +280,12 @@ int main() {
 			20000.f                                     										// far z
 			));
 
+		
 		// Ambient light
 		node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::AmbientLight>>(
-			Renderer::AmbientLight(glm::vec3(0.04, 0.04, 0.02), renderContext), glm::mat4x4(1.f)
+			Renderer::AmbientLight(PASSIVE_LIGHT_COLOR, renderContext), glm::mat4x4(1.f)
 			));
-
+			
 		node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::ShadowDirectionalLight>>(
 			sunLight,
 			glm::mat4x4(1.f)

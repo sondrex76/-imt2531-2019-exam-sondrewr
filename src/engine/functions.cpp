@@ -11,9 +11,11 @@ float getHeight(glm::vec3 x, glm::vec3 y, glm::vec3 z) {
 }
 
 glm::vec2 textureOffset(float height) {
+	// Calculates highest value
 	float tallestValue = MAX_HEIGHT * HEIGHT_TERRAIN * SIZE_TERRAIN;
+
 	if (height < HEIGHT_STAGES[0] * tallestValue)		// Water
-		return glm::vec2(0.6, 0);
+		return glm::vec2(0.8, 0);
 	else if (height < HEIGHT_STAGES[1] * tallestValue)	// Sand
 		return glm::vec2(0.6, 0);
 	else if (height < HEIGHT_STAGES[2] * tallestValue)	// Earth

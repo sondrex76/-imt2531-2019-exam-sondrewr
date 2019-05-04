@@ -16,6 +16,8 @@ namespace Renderer {
 
         Material(glm::vec3 diffuse, glm::vec3 specular, float shininess, glm::vec3 emissive);
 
+		Material(ImageTexture diffuse, glm::vec3 specular, float shininess, glm::vec3 emissive); // DEBUG
+
         Material(ImageTexture diffuse, ImageTexture specular, ImageTexture shininess, ImageTexture emissive);
 
         void bind() const;

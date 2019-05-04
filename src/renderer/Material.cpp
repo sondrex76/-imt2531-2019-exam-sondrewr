@@ -55,6 +55,13 @@ Material::Material(Renderer::ImageTexture diffuse, Renderer::ImageTexture specul
       m_shininess(std::move(shininess)),
       m_emissive(std::move(emissive)) {}
 
+// DEBUG
+Material::Material(Renderer::ImageTexture diffuse, glm::vec3 specular, float shininess, glm::vec3 emissive)
+	: m_diffuse(std::move(diffuse)),
+	m_specular(ImageTexture::fromColor(specular)),
+	m_shininess(ImageTexture::fromColor(glm::vec3(shininess, shininess, shininess))),
+	m_emissive(ImageTexture::fromColor(emissive)) {}
+
 void Material::bind() const {
     // Bind each texture to a unit
     glActiveTexture(GL_TEXTURE0);
