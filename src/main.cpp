@@ -200,6 +200,21 @@ int main() {
 
 	std::vector<Renderer::SpotLight> lights; // vector of lights
 
+	// Snowflake
+	vertices.clear();	// Clears vector so it can be used for snowflake
+	indices.clear();	// Clears vector so it can be used for snowflake
+	numIndices = 0;		// Resets value so it can be used for snowflake
+	for (int i = 0; i < 12; i++)	// Goes through the four triangles
+		indices.push_back(numIndices++);
+
+
+	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
+	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.01, 0.01, 0.01), 32.0f, glm::vec3(0, 0, 0)));
+
+
+	vertices.push_back(Renderer::Vertex{ /*pos*/{glm::vec3(, ,)}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
+	Renderer::Model snowflakeModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
+
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
 	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
@@ -353,6 +368,7 @@ int main() {
 
 		renderContext.render(windowWidth, windowHeight, node);
 
+		// Render ImGui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

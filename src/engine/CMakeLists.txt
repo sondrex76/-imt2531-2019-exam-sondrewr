@@ -1,6 +1,7 @@
 set(SOURCE_FILES
 		"${CMAKE_CURRENT_SOURCE_DIR}/Functions.h" "${CMAKE_CURRENT_SOURCE_DIR}/Functions.cpp"
 		"${CMAKE_CURRENT_SOURCE_DIR}/Menu.h" "${CMAKE_CURRENT_SOURCE_DIR}/Menu.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/Weather.h" "${CMAKE_CURRENT_SOURCE_DIR}/Weather.cpp"
 		"${CMAKE_CURRENT_SOURCE_DIR}/PerlinNoise.h" "${CMAKE_CURRENT_SOURCE_DIR}/PerlinNoise.cpp")
 		
 
