@@ -136,11 +136,13 @@ int main() {
 	for (int i = 0; i < SIZE_ZONES; i++) {
 		for (int n = 0; n < SIZE_ZONES; n++) {
 			globalGradient[i][n][0] = distribution(generator);
-
+			globalGradient[i][n][1] = distribution(generator);
+			/*
 			if (i < SIZE_ZONES || n > SIZE_ZONES && i > SIZE_ZONES) // Attempt at making the terrain decrease in height at certain points
 				globalGradient[i][n][1] /= 2; 
 			else
 				globalGradient[i][n][1] = distribution(generator);
+				*/
 		}
 	}
 
@@ -151,8 +153,6 @@ int main() {
 		}
 	}
 
-	int debugX = 0, debugY = 0;
-
 	// Create vertevies based on heightmap
 	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
 		for (int y = 0; y < SIZE_ENVIORMENT; y++) { // y
@@ -161,13 +161,13 @@ int main() {
 			if (x + 1 < SIZE_ENVIORMENT && y + 1 < SIZE_ENVIORMENT) {
 				// the vectors of the coordinates to be used
 				glm::vec3 vectors[] = {
-					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)),	// Upper/right triangle
-					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y),
-					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),
+					glm::vec3(SIZE_TERRAIN * (x + 1), HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)),	// Upper/right triangle
+					glm::vec3(SIZE_TERRAIN * (x + 1),  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y),
+					glm::vec3(SIZE_TERRAIN * x,  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),
 
-					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),						// Lower/left triangle
-					glm::vec3(SIZE_TERRAIN * x, SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)),
-					glm::vec3(SIZE_TERRAIN * (x + 1), SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1))
+					glm::vec3(SIZE_TERRAIN * x,  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),						// Lower/left triangle
+					glm::vec3(SIZE_TERRAIN * x,  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)),
+					glm::vec3(SIZE_TERRAIN * (x + 1),  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1))
 				};
 				// Normal values
 				glm::vec3 normal1 = getNormals(vectors[0], vectors[1], vectors[2]), normal2 = getNormals(vectors[3], vectors[4], vectors[5]);
@@ -181,10 +181,14 @@ int main() {
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
-				debugY++; 
 			}
 		}
 	}
+
+	// Attempt to render textures
+	// TEST
+	Renderer::ImageTexture stuff(Renderer::ImageTexture::fromFile("/<path>"));
+
 
 	// Generates material and actual terrain
 	Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
