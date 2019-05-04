@@ -149,7 +149,7 @@ int main() {
 	// Generates map through perlin noise
 	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
 		for (int n = 0; n < SIZE_ENVIORMENT; n++) { // y
-			heights[i][n] = perlin(i / 10.0f, n / 10.0f);
+			heights[i][n] = perlin((float)i / SIZE_DIVIDER, (float)n / SIZE_DIVIDER);
 		}
 	}
 
