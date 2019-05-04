@@ -311,20 +311,22 @@ int main() {
 					glm::vec3(0, 0, 0),				// direction
 					glm::vec3(1, 1, 1),				// Color
 					(float)(360.f * M_PI / 180.f),	// cutoffRadians
-					1.0f,							// focus
+					10.0f,							// focus
 					1.0f,							// ambient
-					10.0f,							// radius
+					100.0f,							// radius
 					1.0f,							// falloff
 					renderContext					// renderContext
 				)
 			);
-			std::cout << "TEST" << std::endl; // DEBUG
 		}
 
 		// std::vector<Scenegraph::LightNode<Renderer::SpotLight>> lights;
 		// Draw all lights inside of lights
 		for (int i = 0; i < lights.size(); i++) {
-			//node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::SpotLight>>(std::move(lights[i])));
+			node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::SpotLight>>(
+				Renderer::SpotLight(lights[i]), glm::mat4x4(1.f)
+				)
+			);
 		}
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
