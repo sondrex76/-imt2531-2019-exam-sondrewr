@@ -17,6 +17,7 @@ const float MAX_HEIGHT = 257;								// Maximum height
 const float SENSITIVITY = 0.005;							// Camera sensitivity
 const float MAX_ANGLE_VERTICAL = 0.8f;						// Max angle down and up
 const float MOVEMENT_SPEED = 10;							// Movement speed
+const float DISTANCE_LIGHT_SPAWN = 150.0f;					// Distance from camera light source spawns
 
 const float HEIGHT_STAGES[] = {								// Height stages(multiplies of max height)
 	0.02,

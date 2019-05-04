@@ -130,3 +130,23 @@ void updateCords(glm::vec3& CameraCordsOffset) {
 	}
 
 }
+
+bool placeLight() {
+	ImGuiWindowFlags window_flags = runFlags();
+
+	bool makeNewLight = false;
+
+	// Place light
+	ImGui::SetNextWindowPos(ImVec2(BUTTON_SIZE * 2 + PADDING, PADDING));
+	ImGui::SetNextWindowSize(ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+	{
+		ImGui::Begin("ButtonPlaceLight", nullptr, window_flags);
+
+		ImGui::Button("Place\nlight", ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+		if (ImGui::IsItemActivated()) makeNewLight = true;
+
+		ImGui::End();
+	}
+
+	return makeNewLight;
+}

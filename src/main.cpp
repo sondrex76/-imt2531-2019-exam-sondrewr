@@ -178,7 +178,7 @@ int main() {
 				
 
 				height = getHeight(vectors[3], vectors[4], vectors[5]);
-				uvOffset = textureOffset(height);						// uv offset
+				uvOffset = textureOffset(height);								// uv offset
 
 				// Lower/left triangle
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
@@ -197,6 +197,8 @@ int main() {
 
 	// Generates material and actual terrain
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
+
+	std::vector<Renderer::SpotLight> lights; // vector of lights
 
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
@@ -219,6 +221,7 @@ int main() {
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
 		menuDynamic();					// dynamic imGUI
 		updateCords(CameraCordsOffset);	// Updates coordinates
+		bool placeLightNode = placeLight();	// Checks if light should be placed
 
 		int windowWidth, windowHeight;
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
@@ -300,9 +303,33 @@ int main() {
 				glm::vec3(0, 1, 0)																	// Defines the up direction
 			));
 
+		// Places new light into vector
+		if (placeLightNode) {
+			lights.push_back(
+				Renderer::SpotLight( // the vector vec4(1, 1, 1, 1) is incorrect, figure out how to get vector from matrix
+					CameraCordsOffset + (glm::vec3)angle * DISTANCE_LIGHT_SPAWN,
+					glm::vec3(0, 0, 0),				// direction
+					glm::vec3(1, 1, 1),				// Color
+					(float)(360.f * M_PI / 180.f),	// cutoffRadians
+					1.0f,							// focus
+					1.0f,							// ambient
+					10.0f,							// radius
+					1.0f,							// falloff
+					renderContext					// renderContext
+				)
+			);
+			std::cout << "TEST" << std::endl; // DEBUG
+		}
+
+		// std::vector<Scenegraph::LightNode<Renderer::SpotLight>> lights;
+		// Draw all lights inside of lights
+		for (int i = 0; i < lights.size(); i++) {
+			//node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::SpotLight>>(std::move(lights[i])));
+		}
+
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
-			CameraCordsOffset,																// pos
+			CameraCordsOffset,																	// pos
 			angle,																				// forward
 			glm::vec3(0., 1., 0.),                     											// up
 			60.f * M_PI / 180.f,                                      							// fov
