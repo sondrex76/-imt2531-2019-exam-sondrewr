@@ -173,25 +173,29 @@ int main() {
 				glm::vec3 normal1 = getNormals(vectors[0], vectors[1], vectors[2]), normal2 = getNormals(vectors[3], vectors[4], vectors[5]);
 
 				// Upper/right triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0, 0} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0, 1} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{1, 1} });
 				
 				// Lower/left triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.5, 0.5} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0, 0} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0, 1} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{1, 1} });
 			}
 		}
 	}
 
 	// Attempt to render textures
 	// TEST
-	// Renderer::ImageTexture stuff(Renderer::ImageTexture::fromFile("/<path>"));
+	Renderer::ImageTexture stuff1(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
+	Renderer::ImageTexture stuff2(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
+	Renderer::ImageTexture stuff3(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
+	Renderer::ImageTexture stuff4(Renderer::ImageTexture::fromFile("resources/Textures/Ground/Snow.png"));
 
+	Renderer::Material terrainMaterial(Renderer::Material(std::move(stuff1), std::move(stuff2), std::move(stuff3), std::move(stuff4)));
 
 	// Generates material and actual terrain
-	Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
+	// Renderer::Material terrainMaterial(Renderer::Material(glm::vec3(0.5, 0.5, 0.5), glm::vec3(0.8, 0.8, 0.8), 32.0f, glm::vec3(0.0f, 0.0f, 0.0f)));
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
 	// Game loop
