@@ -177,13 +177,17 @@ int main() {
 
 				// Upper/right triangle
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0.24 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.25 + uvOffset.x, 0.24 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
 				
+
+				height = getHeight(vectors[3], vectors[4], vectors[5]);
+				uvOffset = textureOffset(height);						// uv offset
+
 				// Lower/left triangle
 				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0.24 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.25 + uvOffset.x, 0.24 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
+				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
 			}
 		}
 	}
