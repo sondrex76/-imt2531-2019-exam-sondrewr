@@ -5,5 +5,5 @@
 // Class with general functions
 
 glm::vec3 getNormals(glm::vec3 x, glm::vec3 y, glm::vec3 z);	// Returns the normal of the triangle
-float getHeight(glm::vec3 x, glm::vec3 y, glm::vec3 z);			// Returns averege height of vertex
+float getHeight(glm::vec3 x, glm::vec3 y, glm::vec3 z);			// Returns highest height of vertex
 glm::vec2 textureOffset(float height);							// Returns the texture offset based on height

@@ -7,7 +7,13 @@ glm::vec3 getNormals(glm::vec3 x, glm::vec3 y, glm::vec3 z) {
 }
 
 float getHeight(glm::vec3 x, glm::vec3 y, glm::vec3 z) {
-	return (x.y + y.y + x.y) / 3;
+	// Returns highest y value
+	if (x.y > y.y && x.y > z.y)
+		return x.y;
+	else if (y.y > x.y && y.y > z.y)
+		return y.y;
+	else
+		return z.y;
 }
 
 glm::vec2 textureOffset(float height) {

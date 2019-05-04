@@ -2,8 +2,8 @@
 
 #include "../renderer/RenderContext.h"
 
-const glm::vec3 SUN_LIGHT_COLOR(0.9, 0.9, 0.1);
-const glm::vec3 PASSIVE_LIGHT_COLOR(0.008, 0.008, 0.008);
+const glm::vec3 SUN_LIGHT_COLOR(1, 1, 0.05);
+const glm::vec3 PASSIVE_LIGHT_COLOR(0.2, 0.2, 0.15);
 
 const int SIZE_ENVIORMENT = 400;				// Number of points
 const int SIZE_ZONES = 41;						// How many zones are SIZE_ENVIORMENT divided into
