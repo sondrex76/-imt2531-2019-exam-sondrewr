@@ -38,6 +38,7 @@
 #include "engine/consts.h"
 #include "engine/Functions.h"
 #include "engine/PerlinNoise.h"
+#include "engine/Menu.h"
 
 #include "renderer/SpotLight.h"
 #include "renderer/AmbientLight.h"
@@ -72,7 +73,7 @@ int main() {
 	}
 
 	// rendering stuff
-	GFX_GL_CALL(glClearColor(0, 0, 0, 1));						// Sets the rendering color to black
+	GFX_GL_CALL(glClearColor(0, 0, 0.5, 1));					// Sets the rendering color to black
 	GFX_GL_CALL(glEnable(GL_CULL_FACE));						// 
 	GFX_GL_CALL(glFrontFace(GL_CW));							// 
 	GFX_GL_CALL(glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE));	// 
@@ -199,13 +200,48 @@ int main() {
 	// Generates material and actual terrain
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
-
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
 	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
 
+	// imGui static
+	menuStatic(*window);
+	/*
+	const char* glsl_version = "#version 330";
+
+	// IMGUI static
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui::StyleColorsDark();
+	ImGui_ImplOpenGL3_Init(glsl_version);
+	*/
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
+		menuDynamic();	// dynamic imGUI
+		/*
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		bool run = true;
+
+		ImGuiWindowFlags window_flags = 0;
+		window_flags |= ImGuiWindowFlags_NoTitleBar;
+		window_flags |= ImGuiWindowFlags_NoCollapse;
+		window_flags |= ImGuiWindowFlags_NoScrollbar;
+		window_flags |= ImGuiWindowFlags_NoResize;
+		// window_flags |= ImGuiWindowFlags_NoBackground;
+		ImGui::SetNextWindowPos(ImVec2(20, 20));
+		ImGui::SetNextWindowSize(ImVec2(450, 60));
+		{
+			ImGui::Begin("TEST", &run, window_flags);
+			ImGui::SetWindowFontScale(3.0f);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "TEST: %d", 1);
+			ImGui::End();
+		}*/
+
 		int windowWidth, windowHeight;
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
@@ -264,7 +300,7 @@ int main() {
 		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerEye, glm::mat4x4(1.f)));
 		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deerBody, glm::mat4x4(1.f)));
 
-		node.addNode(std::move(deerNode)); // move because it is put into a variable first
+		node.addNode(std::move(deerNode));
 		
 		float angleDown = (float)((ypos - previousMousePosY) * SENSITIVITY);
 		if (angleDown < -MAX_ANGLE_VERTICAL)
@@ -274,19 +310,17 @@ int main() {
 
 		// Angle towards object
 		glm::vec4 angle = glm::normalize(
-			glm::vec4(cameraPos, 0)) * 
-			glm::rotate(
+			glm::vec4(cameraPos, 0) * 
+			glm::rotate(																			// Horizontal
 				glm::mat4x4(1.f),																	// Identify matrix
-				//0.0f,																				// Angle to rotate
-				angleDown,						// Comment out the above and uncomment this to rotate camera around car again
-				glm::vec3(0.5, 0, 0.5)																	// Defines the up direction
+				angleDown,																			// Angle to rotate
+				glm::normalize(glm::vec3(1, 0, 1))													// Defines the up direction
 			) *
-			glm::rotate(
+			glm::rotate(																			// Vertical
 				glm::mat4x4(1.f),																	// Identify matrix
-				//0.0f,																				// Angle to rotate
-				(float)((previousMousePosX - xpos) * SENSITIVITY),						// Comment out the above and uncomment this to rotate camera around car again
+				(float)((previousMousePosX - xpos) * SENSITIVITY),									// Angle to rotate
 				glm::vec3(0, 1, 0)																	// Defines the up direction
-			);
+			));
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
@@ -312,6 +346,9 @@ int main() {
 
 		renderContext.render(windowWidth, windowHeight, node);
 
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
@@ -321,6 +358,9 @@ int main() {
 	}
 
 	glfwDestroyWindow(window);
+	ImGui_ImplGlfw_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 	return 0;
 }
