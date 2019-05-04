@@ -187,7 +187,7 @@ int main() {
 
 	// Attempt to render textures
 	// TEST
-	Renderer::ImageTexture stuff(Renderer::ImageTexture::fromFile("/<path>"));
+	// Renderer::ImageTexture stuff(Renderer::ImageTexture::fromFile("/<path>"));
 
 
 	// Generates material and actual terrain
