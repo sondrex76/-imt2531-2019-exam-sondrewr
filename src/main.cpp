@@ -45,6 +45,7 @@
 
 // Global values of gradiant
 float globalGradient[SIZE_ZONES][SIZE_ZONES][2];
+bool moving[6] = { false, false, false, false, false, false };
 
 int main() {
 	if (!glfwInit()) {
@@ -203,7 +204,6 @@ int main() {
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
 	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
-
 	// imGui static
 	menuStatic(*window);
 	/*

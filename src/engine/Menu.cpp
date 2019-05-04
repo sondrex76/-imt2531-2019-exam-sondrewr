@@ -12,12 +12,14 @@ void menuStatic(GLFWwindow& window) {
 	ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-void menuDynamic(bool &buttonRun) {
+// All dynamic imGui code
+void menuDynamic() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
 	bool run = true;
+	extern bool moving[6];
 
 	ImGuiWindowFlags window_flags = 0;
 	window_flags |= ImGuiWindowFlags_NoTitleBar;
@@ -25,24 +27,57 @@ void menuDynamic(bool &buttonRun) {
 	window_flags |= ImGuiWindowFlags_NoScrollbar;
 	window_flags |= ImGuiWindowFlags_NoResize;
 	window_flags |= ImGuiWindowFlags_NoBackground;
-	ImGui::SetNextWindowPos(ImVec2(20, 20));
-	ImGui::SetNextWindowSize(ImVec2(450, 60));
+
+	// left
+	ImGui::SetNextWindowPos(ImVec2(PADDING, PADDING));
+	ImGui::SetNextWindowSize(ImVec2(BUTTON_SIZE, BUTTON_SIZE));
 	{
-		ImGui::Begin("TEST", &run, window_flags);
-		ImGui::SetWindowFontScale(1.0f);
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "TEST: %d", 0.5f);
+		ImGui::Begin("ButtonsLeft", &run, window_flags);
+
+		ImGui::Button("-x", ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+		if (ImGui::IsItemActivated()) moving[0] = true;
+
 		ImGui::End();
 	}
 
-
-	ImGui::SetNextWindowPos(ImVec2(435, 100));
-	ImGui::SetNextWindowSize(ImVec2(410, 520));
+	// right
+	ImGui::SetNextWindowPos(ImVec2(BUTTON_SIZE + PADDING, PADDING));
+	ImGui::SetNextWindowSize(ImVec2(BUTTON_SIZE, BUTTON_SIZE));
 	{
-		ImGui::Begin("Menu", &buttonRun, window_flags);
+		ImGui::Begin("ButtonRight", &run, window_flags);
 
-		ImGui::Button("Button", ImVec2(100, 100)); 
-		if (ImGui::IsItemActivated())
-			buttonRun = false;
+		ImGui::Button("x", ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+		if (ImGui::IsItemActivated()) moving[1] = true;
+
+		ImGui::End();
+	}
+
+	//forward/backward
+	ImGui::SetNextWindowPos(ImVec2(PADDING, BUTTON_SIZE + PADDING));
+	ImGui::SetNextWindowSize(ImVec2(BUTTON_SIZE, BUTTON_SIZE * 2));
+	{
+		ImGui::Begin("ButtonsForwardBackward", &run, window_flags);
+
+		ImGui::Button("z", ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+		if (ImGui::IsItemActivated()) moving[2] = true;
+
+		ImGui::Button("-z", ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+		if (ImGui::IsItemActivated()) moving[3] = true;
+
+		ImGui::End();
+	}
+
+	// up/down
+	ImGui::SetNextWindowPos(ImVec2(BUTTON_SIZE + PADDING, BUTTON_SIZE + PADDING));
+	ImGui::SetNextWindowSize(ImVec2(BUTTON_SIZE, BUTTON_SIZE * 2));
+	{
+		ImGui::Begin("ButtonsUpDown", &run, window_flags);
+
+		ImGui::Button("y(up)", ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+		if (ImGui::IsItemActivated()) moving[4] = true;
+
+		ImGui::Button("y(down)", ImVec2(BUTTON_SIZE, BUTTON_SIZE));
+		if (ImGui::IsItemActivated()) moving[5] = true;
 
 		ImGui::End();
 	}
