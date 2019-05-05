@@ -128,7 +128,7 @@ int main() {
 	std::default_random_engine generator;
 	std::uniform_real_distribution<float> distribution(0, MAX_HEIGHT);
 	std::uniform_int_distribution<int> snowLocation(0, DIST_SNOW_SPAWN);	// distribution(snowLocation) returns an int between 0 and DIST_SNOW_SPAWN
-
+	
 	for (int i = 0; i < SIZE_ZONES; i++) {
 		for (int n = 0; n < SIZE_ZONES; n++) {
 			globalGradient[i][n][0] = distribution(generator);
@@ -264,6 +264,9 @@ int main() {
 	// Debug snowflake
 	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 1, 0)));
 
+	// Snow timer
+	int snowTimer = 0;
+
 	glm::vec3 deerPosition = glm::vec3(0, 0, 0);
 
 	// Game loop
@@ -327,11 +330,26 @@ int main() {
 			deerPosition					// Offset/Coordinates
 			));	
 
+		// Generates snowflakes
+		snowTimer -= timeSpent;
+		// Spawns snowwhen snowTimer is smaller then 0 and adds waiting time to the waiting
+		for (; snowTimer < 0; snowTimer += WAIT_TIME_SNOW) {
+			glm::vec2 location = glm::vec2(snowLocation(generator), snowLocation(generator)); // Gets grid location of snow
+
+			// SIZE_TERRAIN
+			// std::cout << location.x / SIZE_TERRAIN << ", " << location.y / SIZE_TERRAIN << std::endl;
+
+			if (validLocation(CameraCordsOffset.x + location.x) && validLocation(CameraCordsOffset.z + location.y))
+			{
+				snowflakes.push_back(Snowflake(glm::vec3((CameraCordsOffset.x + location.x), SNOW_SPAWN_HEIGHT, (CameraCordsOffset.z + location.y)), glm::vec3(0, 1, 0)));
+				std::cout << "DEBUG: " << (CameraCordsOffset.x + location.x) / SIZE_TERRAIN << ", " << (CameraCordsOffset.z + location.y) / SIZE_TERRAIN << std::endl;
+			}
+		}
 
 		for (int i = 0; i < snowflakes.size(); i++) { // Goes through all current snowflakes
 			snowflakes[i].moveSnowflake(timeSpent); // Updates position
 
-			if (snowflakes[i].returnHeight() < heights[(int)(snowflakes[i].returnX())][(int)(snowflakes[i].returnZ())]) { // Checks if snowflake should be deleted
+			if (snowflakes[i].returnHeight() < heights[(int)(snowflakes[i].returnX() / SIZE_TERRAIN)][(int)(snowflakes[i].returnZ() / SIZE_TERRAIN)]) { // Checks if snowflake should be deleted
 				snowflakes.erase(snowflakes.begin() + i);
 				i--;
 			}
@@ -340,12 +358,6 @@ int main() {
 			}
 		}
 
-		/*
-		node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowflakeTestModel, glm::scale(
-			glm::mat4x4(1.f),				// Identity matrix
-			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
-		))); */
-		
 		 // Render the terrain
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(terrainGeometry, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix

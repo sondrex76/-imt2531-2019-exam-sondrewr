@@ -42,3 +42,10 @@ glm::vec2 textureOffset(float height) {
 	else
 		return glm::vec2(0.0, 0);		// Snow
 }
+
+// Checks if value is nor smaller then 0 and that it is smaller then the maximum size of the map
+bool validLocation(double location) {
+	location /= SIZE_TERRAIN;
+
+	return (location >= 0 && location < SIZE_ENVIORMENT);
+}

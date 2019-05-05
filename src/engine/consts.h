@@ -10,7 +10,7 @@ const int SIZE_DIVIDER = 40;								// Number of points per row
 const int SIZE_ZONES = SIZE_ENVIORMENT / SIZE_DIVIDER + 1;	// How many zones are SIZE_ENVIORMENT divided into
 const int BUTTON_SIZE = 80;									// Size of ImGui buttons
 const int PADDING = 20;										// Size of padding in ImGui
-const int DIST_SNOW_SPAWN = 20;								// Max distance from camera snow can spawn
+const int DIST_SNOW_SPAWN = 41;								// Max distance from camera snow can spawn
 
 const float SIZE_TERRAIN = 2.0f;							// The size of triangles
 const float HEIGHT_TERRAIN = 0.5f;							// Height of terrain per level
@@ -21,9 +21,11 @@ const float MOVEMENT_SPEED = 10;							// Movement speed
 const float DISTANCE_LIGHT_SPAWN = 50;						// Distance from camera light source spawns
 const float SIZE_SNOWFLAKE = 1.0f;							// Size of snowflake
 const float SPEED_SNOWFLAKE = 0.1f;							// Default speed of snowflake
-const float GRAVITY = 0.0001;								// Strength of gravity
+const float GRAVITY = 0.01;									// Strength of gravity
 const float DEER_SPEED = 0.03;								// Speed of deer
 const float DEER_SCALE = 1.0f;								// Scale of deer
+const float WAIT_TIME_SNOW = 50;							// Waiting time snow
+const float SNOW_SPAWN_HEIGHT = SIZE_TERRAIN * HEIGHT_TERRAIN * MAX_HEIGHT;
 
 const float HEIGHT_STAGES[] = {								// Height stages(multiplies of max height)
 	0.002,
