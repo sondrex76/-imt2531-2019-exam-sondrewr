@@ -68,6 +68,7 @@ namespace Renderer {
         ShaderProgram m_debugLightFrustum;
 #endif
 
+		ShaderProgram m_postSkyboxProgram;
         ShaderProgram m_postDistanceFogProgram;
         ShaderProgram m_postBloomExtractProgram;
         ShaderProgram m_postBloomBlurProgram;

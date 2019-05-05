@@ -354,6 +354,8 @@ int main() {
 			}
 		}
 
+		std::cout << "DEBUG" << std::endl;
+
 		 // Render the terrain
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(terrainGeometry, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix
@@ -395,8 +397,8 @@ int main() {
 					(float)(360.f * M_PI / 180.f),	// cutoffRadians
 					10.0f,							// focus
 					1.0f,							// ambient
-					10.0f,							// radius
-					1.0f,							// falloff
+					25.0f,							// radius
+					0.01f,							// falloff
 					renderContext					// renderContext
 				)
 			);

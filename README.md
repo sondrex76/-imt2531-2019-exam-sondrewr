@@ -23,7 +23,11 @@
 - You can place a light by clicking the place light button just to the right to the movement keys
 - You can move the raindeer by hitting the wasd keys
 - There is a source of light that makes shadows
+- There is a skybox and a rendered sun on the horizon, the sky is blue and the void is a dark red
 
 ## Sources of resources
 Perlin noise: https://en.wikipedia.org/wiki/Perlin_noise
 SNowflake model: https://free3d.com/3d-model/fernlike-stellar-dendrites-snowflake-v1--169045.html
+
+## Known bugs
+- One side of the snow does not render correctly and is just a black square

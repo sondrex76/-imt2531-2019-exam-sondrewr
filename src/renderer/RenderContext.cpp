@@ -15,6 +15,7 @@ RenderContext::RenderContext()
       m_debugLightFrustum(ShaderProgram::vertexFragProgram("debug_lightFrustum.vert", "debug_lightFrustum.frag")),
 #endif
 
+	  m_postSkyboxProgram(ShaderProgram::computeProgram("post_skybox.compute")),
       m_postDistanceFogProgram(ShaderProgram::computeProgram("post_distanceFog.compute")),
       m_postBloomExtractProgram(ShaderProgram::computeProgram("post_bloomExtract.compute")),
       m_postBloomBlurProgram(ShaderProgram::computeProgram("post_bloomBlur.compute")),
@@ -140,6 +141,7 @@ void RenderContext::renderLights(const Scenegraph::Node &node) {
 }
 
 void RenderContext::renderPostEffects() {
+	renderPostPass(m_postSkyboxProgram);
     renderPostPass(m_postDistanceFogProgram);
     renderBloom();
     renderPostPass(m_postGradingProgram);
