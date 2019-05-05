@@ -207,10 +207,7 @@ int main() {
 	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.0001, 0.0001, 0.0001), 0.001f, glm::vec3(0, 0, 0)));
 	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n);	// Remove element at position n
 	std::vector<Snowflake> snowflakes;							// Vector of snowflakes
-	Snowflake testSnowflake = Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0));
-
-	// make test snowflake model
-	Renderer::Model snowflakeTestModel = testSnowflake.returnSnowflake(vertices, indices, std::move(snowflakeMaterial), renderContext);
+	// Renderer::Model snowflakeTestModel = (Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0))).returnSnowflake(indices, std::move(snowflakeMaterial), renderContext);
 
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
@@ -229,6 +226,10 @@ int main() {
 
 	float oldTime = ms.count(), newTime;
 
+	// Snowflakes
+	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0)));
+
+	Renderer::Model snowModel = (Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0))).returnSnowflake(indices, std::move(snowflakeMaterial), renderContext);
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
 		ms = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -287,12 +288,32 @@ int main() {
 			glm::vec3(1, 1, 1)					// Offset/Coordinates
 			));	
 
-		// Snowflake test
+
+		for (int i = 0; i < snowflakes.size(); i++) { // Goes through all current snowflakes
+			// snowflakes[i].moveSnowflake(newTime - oldTime); // Updates position
+
+			if (snowflakes[i].returnHeight() < heights[(int)(snowflakes[i].returnX())][(int)(snowflakes[i].returnZ())]) { // Checks if snowflake should be deleted
+				snowflakes.erase(snowflakes.begin() + i);
+				i--;
+			}
+			else { // Render model
+				std::cout << snowflakes[i].returnHeight() << std::endl;
+
+				// Make snow ,model
+				// Renderer::Model snowModel = snowflakes[i].returnSnowflake(indices, std::move(snowflakeMaterial), renderContext);
+				node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowModel, glm::scale(
+					glm::mat4x4(1.f),				// Identity matrix
+					glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
+				)));
+			}
+		}
+
+		/*
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowflakeTestModel, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix
 			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
-			)));
-
+		))); */
+		
 		 // Render the terrain
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(terrainGeometry, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix

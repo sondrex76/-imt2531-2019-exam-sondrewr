@@ -1,12 +1,10 @@
 #include "Weather.h"
 #include <iostream>
 // Returns model of snowflake with correct normals
-Renderer::Model Snowflake::returnSnowflake(std::vector<Renderer::Vertex>& vertices, std::vector<uint32_t>& indices, Renderer::Material snowflakeMaterial, Renderer::RenderContext& renderContext) {
-	vertices.clear();	// Empties vector, needs to be done each time
+Renderer::Model Snowflake::returnSnowflake(std::vector<uint32_t>& indices, Renderer::Material snowflakeMaterial, Renderer::RenderContext& renderContext) {
+	std::vector<Renderer::Vertex> vertices;
 
 	glm::vec3 normal = getNormals(cords[0], cords[1], cords[2]); // Normal for side 2
-
-	std::cout << "TEST";
 
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
@@ -64,6 +62,7 @@ void Snowflake::moveSnowflake(double time) {
 float Snowflake::returnHeight() {
 	float currentSelection = cords[0].y;
 	for (int i = 1; i < 4; i++)
-		if (currentSelection > cords[i].y) currentSelection = cords[0].y;
+		if (currentSelection > cords[i].y) currentSelection = cords[i].y;
+
 	return currentSelection;
 }
