@@ -215,7 +215,7 @@ int main() {
 		);
 
 	// Time values, stores the old and current times, in addition to the difference
-	int oldTime = ms.count(), newTime, timeSpent;
+	long long oldTime = ms.count(), newTime, timeSpent;
 
 	Renderer::Model snowModel = getSnowModel(renderContext);
 
@@ -224,6 +224,7 @@ int main() {
 	glm::vec3 deerPosition = glm::vec3(0, 0, 0);	// Deer
 	float angleDown = 0;							// Initial angle downwards
 	camera currentCamera = freeCamera;				// Current camera type
+	long long timeCameraSwitched = 0;				// The last time the camera mode switched
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
@@ -260,7 +261,7 @@ int main() {
 		}
 		
 		// Movement left, right
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {	// A key, move left
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {			// A key, move left
 			deerPosition.x -= timeSpent * DEER_SPEED;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
@@ -268,13 +269,19 @@ int main() {
 		}
 
 		// switch camera mode
-		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {	// A key, move left
-			if (currentCamera == freeCamera)
-				currentCamera = firstCamera;
-			else if (currentCamera == firstCamera)
-				currentCamera = thirdCamera;
-			else
-				currentCamera = freeCamera;
+		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {			// A key, move left
+			if (timeCameraSwitched + MIN_TIME_CAMERA < newTime) {	// Checks if enough time have passed
+				timeCameraSwitched = newTime;
+
+				std::cout << newTime << std::endl;
+
+				if (currentCamera == freeCamera)
+					currentCamera = firstCamera;
+				else if (currentCamera == firstCamera)
+					currentCamera = thirdCamera;
+				else
+					currentCamera = freeCamera;
+			}
 		}
 
 		// x, y, z coordinates of camera and object
@@ -331,6 +338,20 @@ int main() {
 
 		node.addNode(std::move(deerNode));
 		
+		// Camera
+
+		// Check what camera mode is being used
+		switch (currentCamera) {
+		case freeCamera:
+
+			break;
+		case firstCamera:
+
+			break;
+		case thirdCamera:
+
+			break;
+		}
 
 		angleDown += (float)((ypos - previousMousePosY) * SENSITIVITY);
 

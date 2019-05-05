@@ -7,7 +7,7 @@ Snowflake::Snowflake(glm::vec3 coordinates, glm::vec3 rotation) {
 	location = coordinates;
 }
 
-void Snowflake::moveSnowflake(int time) {
+void Snowflake::moveSnowflake(long long time) {
 	/*
 	glm::mat4x4 rotationMatrix = glm::rotate(
 		glm::mat4x4(1.f),
