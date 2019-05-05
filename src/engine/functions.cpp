@@ -56,10 +56,9 @@ Renderer::Model getSnowModel(Renderer::RenderContext &renderContext) {
 
 	std::vector<uint32_t> indices;						// indices
 	std::vector<Renderer::Vertex> vertices;				// vector with vertexes
-	int numIndices = 0;
+	int numIndices = 0;									// Number of indices
 
-	numIndices = 0;					// Resets value so it can be used for snowflake
-	for (int i = 0; i < 12; i++)	// Goes through the four triangles
+	for (int i = 0; i < 12; i++)						// Generates the indices for the four triangles
 		indices.push_back(numIndices++);
 
 	// Snowflake model
@@ -84,7 +83,7 @@ Renderer::Model getSnowModel(Renderer::RenderContext &renderContext) {
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
 
-	normal = getNormals(cords[2], cords[3], cords[0]); // Normal for side 2
+	normal = getNormals(cords[3], cords[2], cords[0]); // Normal for side 2
 
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });

@@ -113,11 +113,9 @@ int main() {
 	std::vector<uint32_t> indices;						// indices
 	std::vector<Renderer::Vertex> vertices;				// vector with vertexes
 
-	// Number of indices
-	int numIndices = 0;
 	// Adds one for all elements up and left
-	for (int i = 0; i < pow(SIZE_ENVIORMENT - 1, 2) * 6; i++) { // each loop adds one cube, which consists of two triangles
-		indices.push_back(numIndices++);
+	for (int numIndices = 0; numIndices < pow(SIZE_ENVIORMENT - 1, 2) * 6; numIndices++) { // each loop adds one cube, which consists of two triangles
+		indices.push_back(numIndices);
 	}
 
 	// To have seperate colors, this needs to be split into a vector of models rather then a single one
@@ -227,8 +225,6 @@ int main() {
 	float angleDown = 0;							// Initial angle downwards
 	camera currentCamera = freeCamera;				// Current camera type
 
-	std::cout << "sfijjf" << std::endl;
-
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
 		ms = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -269,6 +265,16 @@ int main() {
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
 			deerPosition.x += timeSpent * DEER_SPEED;
+		}
+
+		// switch camera mode
+		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {	// A key, move left
+			if (currentCamera == freeCamera)
+				currentCamera = firstCamera;
+			else if (currentCamera == firstCamera)
+				currentCamera = thirdCamera;
+			else
+				currentCamera = freeCamera;
 		}
 
 		// x, y, z coordinates of camera and object
