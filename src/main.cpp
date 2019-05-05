@@ -290,6 +290,8 @@ int main() {
 		if (!previousMousePosY)
 			previousMousePosY = ypos;
 
+		// TODO: move deer into its own class and handle movement with something that isn't disgustingly simplistic
+
 		// Movement forwards, backwards
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
 			deerPosition.z += timeSpent * DEER_SPEED;
@@ -432,10 +434,12 @@ int main() {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+		// TODO: Make mousePos relative
+
 		// Updates mouse Pos coordinates
 		// previousMousePosX = xpos;
 		// previousMousePosY = ypos; 
-		oldTime = ms.count();	// Updates oldTime
+		oldTime = newTime;	//		 Updates oldTime
 	}
 
 	glfwDestroyWindow(window);
