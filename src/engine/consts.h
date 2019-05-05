@@ -26,6 +26,9 @@ const float DEER_SPEED = 0.1;								// Speed of deer
 const float DEER_MENU_SPEED_MULT = 20;						// Speed mult of deer for menu
 const float DEER_SCALE = 1.0f;								// Scale of deer
 const float WAIT_TIME_SNOW = 400;							// Waiting time snow
+const float DEER_FIRST_HEIGHT_OFFSET = 10;					// y offset in camera height in first person
+const float DEER_THIRD_HEIGHT_OFFSET = 10;					// y offset in camera height in third person
+
 const float SNOW_SPAWN_HEIGHT = SIZE_TERRAIN * HEIGHT_TERRAIN * MAX_HEIGHT;
 
 const long long MIN_TIME_CAMERA = 200;						// Minimum time that must have passed between camera switching

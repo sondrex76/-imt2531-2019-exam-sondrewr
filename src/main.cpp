@@ -222,7 +222,7 @@ int main() {
 
 	// Snow timer
 	int snowTimer = 0;								// Time until snow should spawn
-	glm::vec3 deerPosition = glm::vec3(0, 0, 0);	// Deer
+	glm::vec3 deerPosition = glm::vec3(0, 10, 0);	// Deer starting position
 	float angleDown = 0;							// Initial angle downwards
 	camera currentCamera = freeCamera;				// Current camera type
 	long long timeCameraSwitched = 0;				// The last time the camera mode switched
@@ -258,11 +258,11 @@ int main() {
 
 				if (currentCamera == freeCamera) {
 					currentCamera = firstCamera;		// Sets the camera mode to its next stage
-					cameraCordsOffset = deerPosition;	// Sets current position to that of the deer
+					cameraCordsOffset = deerPosition + glm::vec3(0, DEER_FIRST_HEIGHT_OFFSET, 0);	// Sets current position to that of the deer
 				}
 				else if (currentCamera == firstCamera) {
 					currentCamera = thirdCamera;		// Sets the camera mode to its next stage
-					cameraCordsOffset = deerPosition;	// Sets current position to that of the deer
+					cameraCordsOffset = deerPosition + glm::vec3(0, DEER_THIRD_HEIGHT_OFFSET, 0);	// Sets current position to that of the deer
 				}
 				else	// Third person perspective
 					currentCamera = freeCamera;
@@ -306,6 +306,28 @@ int main() {
 
 		glm::vec3 movementVector = glm::vec3(0, 0, 0); // vector for how much the camera should move
 
+		// Angle of camera
+		angleDown += (float)((ypos - previousMousePosY) * SENSITIVITY);
+
+		if (angleDown < -MAX_ANGLE_VERTICAL)
+			angleDown = -MAX_ANGLE_VERTICAL;
+		else if (angleDown > MAX_ANGLE_VERTICAL)
+			angleDown = MAX_ANGLE_VERTICAL;
+
+		// Angle towards object
+		glm::vec4 angle = glm::normalize(
+			glm::vec4(0, 0., 50., 0) *
+			glm::rotate(																			// Horizontal
+				glm::mat4x4(1.f),																	// Identify matrix
+				angleDown,																			// Angle to rotate
+				glm::normalize(glm::vec3(1, 0, 1))													// Defines the up direction
+			) *
+			glm::rotate(																			// Vertical
+				glm::mat4x4(1.f),																	// Identify matrix
+				(float)((previousMousePosX - xpos) * SENSITIVITY),									// Angle to rotate
+				glm::vec3(0, 1, 0)																	// Defines the up direction
+			));
+
 		// Check what camera mode is being used
 		if (currentCamera == freeCamera) {										// Free camera movement
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {					// W key, move forwards
@@ -332,14 +354,14 @@ int main() {
 			}
 		}
 		else {	// third and first camera
-			deerPosition = cameraCordsOffset; // sets camera position to that of the deer
 
-			if (freeCamera == firstCamera) // first person 
+			if (currentCamera == firstCamera) // first person 
 			{
+				deerPosition = cameraCordsOffset - glm::vec3(0, DEER_FIRST_HEIGHT_OFFSET, 0); // sets position of deer
 
 			}
 			else {	// Third person
-				
+				deerPosition = cameraCordsOffset - glm::vec3(0, DEER_THIRD_HEIGHT_OFFSET, 0); // sets position of deer
 			}
 
 			// Movement forwards, backwards
@@ -358,27 +380,6 @@ int main() {
 				movementVector.x -= timeSpent * DEER_SPEED;
 			}
 		}
-
-		angleDown += (float)((ypos - previousMousePosY) * SENSITIVITY);
-
-		if (angleDown < -MAX_ANGLE_VERTICAL)
-			angleDown = -MAX_ANGLE_VERTICAL;
-		else if (angleDown > MAX_ANGLE_VERTICAL)
-			angleDown = MAX_ANGLE_VERTICAL;
-
-		// Angle towards object
-		glm::vec4 angle = glm::normalize(
-			glm::vec4(0, 0., 50., 0) *
-			glm::rotate(																			// Horizontal
-				glm::mat4x4(1.f),																	// Identify matrix
-				angleDown,																			// Angle to rotate
-				glm::normalize(glm::vec3(1, 0, 1))													// Defines the up direction
-			) *
-			glm::rotate(																			// Vertical
-				glm::mat4x4(1.f),																	// Identify matrix
-				(float)((previousMousePosX - xpos) * SENSITIVITY),									// Angle to rotate
-				glm::vec3(0, 1, 0)																	// Defines the up direction
-			));
 
 		// Translates movement into the correct direction on the horizontal plane
 		glm::vec2 forwardsVectorZ = glm::normalize(glm::vec2(angle.x, angle.z)) * movementVector.z;	// Gets the direction of the flat plane
