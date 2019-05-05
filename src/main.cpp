@@ -144,10 +144,10 @@ int main() {
 	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
 		for (int n = 0; n < SIZE_ENVIORMENT; n++) { // y
 			heights[i][n] = perlin((float)i / SIZE_DIVIDER, (float)n / SIZE_DIVIDER);
+			if (heights[i][n] <= MAX_HEIGHT * HEIGHT_STAGES[0]) // Sea level
+				heights[i][n] = MAX_HEIGHT * HEIGHT_STAGES[0];
 		}
 	}
-
-	std::cout << "DEBUG: 3" << std::endl;
 
 	// Create vertevies based on heightmap
 	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
@@ -160,34 +160,27 @@ int main() {
 					glm::vec3(SIZE_TERRAIN * (x + 1), HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1)),	// Upper/right triangle
 					glm::vec3(SIZE_TERRAIN * (x + 1),  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x + 1][y], SIZE_TERRAIN * y),
 					glm::vec3(SIZE_TERRAIN * x,  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),
-
-					glm::vec3(SIZE_TERRAIN * x,  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x][y], SIZE_TERRAIN * y),						// Lower/left triangle
-					glm::vec3(SIZE_TERRAIN * x,  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1)),
-					glm::vec3(SIZE_TERRAIN * (x + 1),  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x + 1][y + 1], SIZE_TERRAIN * (y + 1))
+					glm::vec3(SIZE_TERRAIN * x,  HEIGHT_TERRAIN * SIZE_TERRAIN * heights[x][y + 1], SIZE_TERRAIN * (y + 1))
 				};
 				// Normal values
-				glm::vec3 normal1 = getNormals(vectors[0], vectors[1], vectors[2]), normal2 = getNormals(vectors[3], vectors[4], vectors[5]);
+				glm::vec3 normal1 = getNormals(vectors[0], vectors[1], vectors[2]), normal2 = getNormals(vectors[2], vectors[3], vectors[0]);
 
 				float height = getHeight(vectors[0], vectors[1], vectors[2]);
 				glm::vec2 uvOffset = textureOffset(height);						// uv offset
 
-				if (uvOffset.x == 0.8) {
-					// vectors[0] = vectors[1] = vectors[2] = vectors[3] = vectors[4] = vectors[5] = HEIGHT_STAGES[0] * MAX_HEIGHT * HEIGHT_TERRAIN * SIZE_TERRAIN;
-				}
 					// Upper/right triangle
 					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
 					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
 					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
 
 
-					height = getHeight(vectors[3], vectors[4], vectors[5]);
+					height = getHeight(vectors[2], vectors[3], vectors[0]);
 					uvOffset = textureOffset(height);								// uv offset
 
 					// Lower/left triangle
-					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
-					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
-					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
-				
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
 			}
 		}
 	}
