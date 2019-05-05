@@ -18,7 +18,7 @@ private:
 	glm::vec3 location;			// Current orientation
 public:
 	Snowflake(glm::vec3 loc, glm::vec3 rotation);								// Constructor for snowflake
-	void moveSnowflake(double time);											// Moves snowflake based on amount of time
+	void moveSnowflake(int time);												// Moves snowflake based on amount of time
 	void renderSnowflake(Scenegraph::GroupNode &node, Renderer::Model &model);	// Render snowflake
 	float returnHeight();														// Returns lowest height
 	float returnX() { return location.x; };										// Returns starting x

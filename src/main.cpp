@@ -224,16 +224,19 @@ int main() {
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 
-	float oldTime = ms.count(), newTime;
-
-	// Snowflakes
-	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0)));
+	int oldTime = ms.count(), newTime;
 
 	// Snowflake model
 	glm::vec3 cords[4];
 	glm::vec3 coordinates = glm::vec3(0, 0, 0);
 
 	vertices.clear(); // clears vertices
+
+	// Defines coordinates of corners for snowflake
+	cords[0] = coordinates + glm::vec3(SIZE_SNOWFLAKE, SIZE_SNOWFLAKE, 0);
+	cords[1] = coordinates + glm::vec3(SIZE_SNOWFLAKE, 0, 0);
+	cords[2] = coordinates + glm::vec3(0, SIZE_SNOWFLAKE, 0);
+	cords[3] = coordinates;
 
 	glm::vec3 normal = getNormals(cords[0], cords[1], cords[2]); // Normal for side 2
 
@@ -255,12 +258,10 @@ int main() {
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
 
-	cords[0] = coordinates + glm::vec3(SIZE_SNOWFLAKE, SIZE_SNOWFLAKE, 0);
-	cords[1] = coordinates + glm::vec3(SIZE_SNOWFLAKE, 0, 0);
-	cords[2] = coordinates + glm::vec3(0, SIZE_SNOWFLAKE, 0);
-	cords[3] = coordinates;
-
 	Renderer::Model snowModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(snowflakeMaterial), renderContext);
+
+	// Debug snowflake
+	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0)));
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
@@ -322,7 +323,7 @@ int main() {
 
 
 		for (int i = 0; i < snowflakes.size(); i++) { // Goes through all current snowflakes
-			// snowflakes[i].moveSnowflake(newTime - oldTime); // Updates position
+			snowflakes[i].moveSnowflake(newTime - oldTime); // Updates position
 
 			if (snowflakes[i].returnHeight() < heights[(int)(snowflakes[i].returnX())][(int)(snowflakes[i].returnZ())]) { // Checks if snowflake should be deleted
 				snowflakes.erase(snowflakes.begin() + i);
@@ -331,12 +332,10 @@ int main() {
 			else { // Render model
 				snowflakes[i].renderSnowflake(node, snowModel);
 
-				// Make snow ,model
-				// Renderer::Model snowModel = snowflakes[i].returnSnowflake(indices, std::move(snowflakeMaterial), renderContext);
-				//node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowModel, glm::scale(
-				//	glm::mat4x4(1.f),				// Identity matrix
-				//	glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
-				//)));
+				node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowModel, glm::scale(
+					glm::mat4x4(1.f),				// Identity matrix
+					glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
+				)));
 			}
 		}
 
