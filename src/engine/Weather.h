@@ -18,4 +18,5 @@ public:
 		Renderer::RenderContext& renderContext);								// Render context
 	Snowflake(glm::vec3 loc, glm::vec3 rotation);								// Constructor for snowflake
 	void moveSnowflake(double time);											// Moves snowflake based on amount of time
+	float returnHeight();														// Returns lowest height
 };

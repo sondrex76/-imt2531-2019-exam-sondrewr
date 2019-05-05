@@ -60,3 +60,10 @@ void Snowflake::moveSnowflake(double time) {
 	cords[2] = glm::vec4(cords[2], 0) * mult;
 	cords[3] = glm::vec4(cords[3], 0) * mult;
 }
+
+float Snowflake::returnHeight() {
+	float currentSelection = cords[0].y;
+	for (int i = 1; i < 4; i++)
+		if (currentSelection > cords[i].y) currentSelection = cords[0].y;
+	return currentSelection;
+}

@@ -225,10 +225,15 @@ int main() {
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 
-	float oldTime = 0, newTime;
+	float oldTime = ms.count(), newTime;
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
+		ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::system_clock::now().time_since_epoch()
+			);
+		newTime = ms.count();	// Updates newTime
+
 		menuDynamic();					// dynamic imGUI
 		updateCords(CameraCordsOffset);	// Updates coordinates
 		bool placeLightNode = placeLight();	// Checks if light should be placed
@@ -377,6 +382,7 @@ int main() {
 		// Updates mouse Pos coordinates
 		// previousMousePosX = xpos;
 		// previousMousePosY = ypos; 
+		oldTime = ms.count();	// Updates oldTime
 	}
 
 	glfwDestroyWindow(window);
