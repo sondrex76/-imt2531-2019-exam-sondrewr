@@ -88,32 +88,32 @@ void menuDynamic() {
 	}
 }
 
-void updateCords(glm::vec3& CameraCordsOffset) {
+void updateCords(glm::vec3& cameraCordsOffset) {
 	extern bool moving[6];
 	
 	// is in an if else since only one can be true at a time and values is in an array
 	if (moving[0]) {		// left
-		CameraCordsOffset.x -= MOVEMENT_SPEED;
+		cameraCordsOffset.x -= MOVEMENT_SPEED;
 		moving[0] = false;
 	}
 	else if (moving[1]) {	// right
-		CameraCordsOffset.x += MOVEMENT_SPEED;
+		cameraCordsOffset.x += MOVEMENT_SPEED;
 		moving[1] = false;
 	}
 	else if (moving[2]) {	// Forward
-		CameraCordsOffset.z += MOVEMENT_SPEED;
+		cameraCordsOffset.z += MOVEMENT_SPEED;
 		moving[2] = false;
 	}
 	else if (moving[3]) {	// Backward
-		CameraCordsOffset.z -= MOVEMENT_SPEED;
+		cameraCordsOffset.z -= MOVEMENT_SPEED;
 		moving[3] = false;
 	}
 	else if (moving[4]) {	// Up
-		CameraCordsOffset.y += MOVEMENT_SPEED;
+		cameraCordsOffset.y += MOVEMENT_SPEED;
 		moving[4] = false;
 	}
 	else if (moving[5]) {	// Down
-		CameraCordsOffset.y -= MOVEMENT_SPEED;
+		cameraCordsOffset.y -= MOVEMENT_SPEED;
 		moving[5] = false;
 	}
 
@@ -124,7 +124,7 @@ void updateCords(glm::vec3& CameraCordsOffset) {
 	{
 		ImGui::Begin("ButtonsUpDown", nullptr, window_flags);
 
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Coordinates x: %d, y: %d, z: %d", CameraCordsOffset.x, CameraCordsOffset.y, CameraCordsOffset.z);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Coordinates x: %d, y: %d, z: %d", cameraCordsOffset.x, cameraCordsOffset.y, cameraCordsOffset.z);
 
 		ImGui::End();
 	}

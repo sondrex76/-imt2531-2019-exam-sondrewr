@@ -202,7 +202,7 @@ int main() {
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
 	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
-	glm::vec3 CameraCordsOffset(0, 100, 50);			// Camera offset in coordinates
+	glm::vec3 cameraCordsOffset(0, 100, 50);			// Camera offset in coordinates
 
 	// imGui static
 	menuStatic(*window);
@@ -235,7 +235,7 @@ int main() {
 		timeSpent = newTime - oldTime;	// Gets time value
 
 		menuDynamic();					// dynamic imGUI
-		updateCords(CameraCordsOffset);	// Updates coordinates
+		updateCords(cameraCordsOffset);	// Updates coordinates
 		bool placeLightNode = placeLight();	// Checks if light should be placed
 
 		int windowWidth, windowHeight;
@@ -249,24 +249,6 @@ int main() {
 			previousMousePosX = xpos;
 		if (!previousMousePosY)
 			previousMousePosY = ypos;
-
-		// TODO: move deer into its own class and handle movement with something that isn't disgustingly simplistic
-
-		// Movement forwards, backwards
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
-			deerPosition.z += timeSpent * DEER_SPEED;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
-			deerPosition.z -= timeSpent * DEER_SPEED;
-		}
-		
-		// Movement left, right
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {			// A key, move left
-			deerPosition.x -= timeSpent * DEER_SPEED;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
-			deerPosition.x += timeSpent * DEER_SPEED;
-		}
 
 		// switch camera mode
 		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {			// A key, move left
@@ -309,9 +291,9 @@ int main() {
 		for (; snowTimer < 0; snowTimer += WAIT_TIME_SNOW) {
 			glm::vec2 location = glm::vec2(snowLocation(generator), snowLocation(generator)); // Gets grid location of snow
 
-			if (validLocation(CameraCordsOffset.x / 2 + location.x) && validLocation(CameraCordsOffset.z / 2 + location.y))
+			if (validLocation(cameraCordsOffset.x / 2 + location.x) && validLocation(cameraCordsOffset.z / 2 + location.y))
 			{
-				snowflakes.push_back(Snowflake(glm::vec3((CameraCordsOffset.x / 2 + location.x), SNOW_SPAWN_HEIGHT, (CameraCordsOffset.z / 2 + location.y)), glm::vec3(0, 1, 0)));
+				snowflakes.push_back(Snowflake(glm::vec3((cameraCordsOffset.x / 2 + location.x), SNOW_SPAWN_HEIGHT, (cameraCordsOffset.z / 2 + location.y)), glm::vec3(0, 1, 0)));
 			}
 		}
 
@@ -341,16 +323,39 @@ int main() {
 		// Camera
 
 		// Check what camera mode is being used
-		switch (currentCamera) {
-		case freeCamera:
+		if (currentCamera == freeCamera) {
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
+				cameraCordsOffset.z += timeSpent * DEER_SPEED;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
+				cameraCordsOffset.z -= timeSpent * DEER_SPEED;
+			}
 
-			break;
-		case firstCamera:
+			// Movement left, right
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {			// A key, move left
+				cameraCordsOffset.x -= timeSpent * DEER_SPEED;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
+				cameraCordsOffset.x += timeSpent * DEER_SPEED;
+			}
+		}
+		else {	// third and first camera
+			// Movement forwards, backwards
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
+				cameraCordsOffset.z += timeSpent * DEER_SPEED;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
+				cameraCordsOffset.z -= timeSpent * DEER_SPEED;
+			}
 
-			break;
-		case thirdCamera:
-
-			break;
+			// Movement left, right
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {			// A key, move left
+				cameraCordsOffset.x -= timeSpent * DEER_SPEED;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
+				cameraCordsOffset.x += timeSpent * DEER_SPEED;
+			}
+			
 		}
 
 		angleDown += (float)((ypos - previousMousePosY) * SENSITIVITY);
@@ -378,7 +383,7 @@ int main() {
 		if (placeLightNode) {
 			lights.push_back(
 				Renderer::SpotLight( // the vector vec4(1, 1, 1, 1) is incorrect, figure out how to get vector from matrix
-					CameraCordsOffset + (glm::vec3)angle * DISTANCE_LIGHT_SPAWN,
+					cameraCordsOffset + (glm::vec3)angle * DISTANCE_LIGHT_SPAWN,
 					glm::vec3(0, 0, 0),				// direction
 					glm::vec3(1, 1, 1),				// Color
 					(float)(360.f * M_PI / 180.f),	// cutoffRadians
@@ -402,7 +407,7 @@ int main() {
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
-			CameraCordsOffset,																	// pos
+			cameraCordsOffset,																	// pos
 			angle,																				// forward
 			glm::vec3(0., 1., 0.),                     											// up
 			60.f * M_PI / 180.f,                                      							// fov
@@ -430,8 +435,6 @@ int main() {
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-		// TODO: Make mousePos relative
 
 		// Updates mouse Pos coordinates
 		// previousMousePosX = xpos;
