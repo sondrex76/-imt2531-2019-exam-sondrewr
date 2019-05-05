@@ -16,12 +16,16 @@ uniform sampler2D emissiveMap;
 uniform vec3 extraEmissive;
 
 void main() {
-    vec3 diffuseColor = texture(diffuseMap, fsUv).rgb;
+    vec4 diffuseColor = texture(diffuseMap, fsUv);
     vec3 specularColor = texture(specularMap, fsUv).rgb;
     float shininess = texture(shininessMap, fsUv).x;
     vec3 emissiveColor = texture(emissiveMap,  fsUv).rgb + extraEmissive;
+	
+	if (diffuseColor.a < 0.1) {
+		discard;
+	}
 
-    outDiffuseShininess = vec4(diffuseColor, shininess);
+	outDiffuseShininess = vec4(diffuseColor.rgb, shininess);
     outSpecular = vec4(specularColor, 0.);
     outEmissive = vec4(emissiveColor, 1.);
     outNormal = vec4(fsNormal, 0.);

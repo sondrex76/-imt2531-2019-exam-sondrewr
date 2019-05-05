@@ -6,7 +6,7 @@ Renderer::Model Snowflake::returnSnowflake(std::vector<Renderer::Vertex>& vertic
 
 	glm::vec3 normal = getNormals(cords[0], cords[1], cords[2]); // Normal for side 2
 
-	std::cout << "1";
+	std::cout << "TEST";
 
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });

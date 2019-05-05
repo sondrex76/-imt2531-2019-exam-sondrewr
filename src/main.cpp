@@ -127,6 +127,7 @@ int main() {
 	// Random number generator
 	std::default_random_engine generator;
 	std::uniform_real_distribution<float> distribution(0, MAX_HEIGHT);
+	std::uniform_int_distribution<int> snowLocation(0, DIST_SNOW_SPAWN);	// distribution(snowLocation) returns an int between 0 and DIST_SNOW_SPAWN
 
 	for (int i = 0; i < SIZE_ZONES; i++) {
 		for (int n = 0; n < SIZE_ZONES; n++) {
@@ -197,14 +198,15 @@ int main() {
 	std::vector<Renderer::SpotLight> lights; // vector of lights placed by user
 
 	// Snowflake
-	indices.clear();	// Clears vector so it can be used for snowflake
-	numIndices = 0;		// Resets value so it can be used for snowflake
+	indices.clear();				// Clears vector so it can be used for snowflake
+	numIndices = 0;					// Resets value so it can be used for snowflake
 	for (int i = 0; i < 12; i++)	// Goes through the four triangles
 		indices.push_back(numIndices++);
 
 	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
 	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.0001, 0.0001, 0.0001), 0.001f, glm::vec3(0, 0, 0)));
-	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n); // Remove element at position n
+	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n);	// Remove element at position n
+	std::vector<Snowflake> snowflakes;							// Vector of snowflakes
 	Snowflake testSnowflake = Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0));
 
 	// make test snowflake model
