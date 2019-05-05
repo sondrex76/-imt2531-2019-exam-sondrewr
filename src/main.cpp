@@ -229,7 +229,39 @@ int main() {
 	// Snowflakes
 	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0)));
 
-	Renderer::Model snowModel = (Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0))).returnSnowflake(indices, std::move(snowflakeMaterial), renderContext);
+	// Snowflake model
+	glm::vec3 cords[4];
+	glm::vec3 coordinates = glm::vec3(0, 0, 0);
+
+	vertices.clear(); // clears vertices
+
+	glm::vec3 normal = getNormals(cords[0], cords[1], cords[2]); // Normal for side 2
+
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
+
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
+
+	normal = getNormals(cords[4], cords[2], cords[0]); // Normal for side 2
+
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
+
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
+
+	cords[0] = coordinates + glm::vec3(SIZE_SNOWFLAKE, SIZE_SNOWFLAKE, 0);
+	cords[1] = coordinates + glm::vec3(SIZE_SNOWFLAKE, 0, 0);
+	cords[2] = coordinates + glm::vec3(0, SIZE_SNOWFLAKE, 0);
+	cords[3] = coordinates;
+
+	Renderer::Model snowModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(snowflakeMaterial), renderContext);
+
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
 		ms = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -299,12 +331,14 @@ int main() {
 			else { // Render model
 				std::cout << snowflakes[i].returnHeight() << std::endl;
 
+				snowflakes[i].renderSnowflake(node, snowModel);
+
 				// Make snow ,model
 				// Renderer::Model snowModel = snowflakes[i].returnSnowflake(indices, std::move(snowflakeMaterial), renderContext);
-				node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowModel, glm::scale(
-					glm::mat4x4(1.f),				// Identity matrix
-					glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
-				)));
+				//node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowModel, glm::scale(
+				//	glm::mat4x4(1.f),				// Identity matrix
+				//	glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
+				//)));
 			}
 		}
 

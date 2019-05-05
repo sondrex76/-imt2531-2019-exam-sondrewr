@@ -1,23 +1,26 @@
 #pragma once
 #include "../renderer//Model.h"
+#include "../renderer//scenegraph/GeometryNode.h"
+#include "..//renderer/scenegraph/GroupNode.h"
+
 #include "Functions.h"
 #include "consts.h"
+
 #include <glm/ext/matrix_transform.hpp>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 class Snowflake {
 private:
 	glm::vec3 rotationSpeed;	// Rotation speed per axis
-	glm::vec3 cords[4];			// Coordinates
+	glm::vec3 orientation;		// Current orientation
+	glm::vec3 location;			// Current orientation
 public:
-	Renderer::Model returnSnowflake(											// Returns model of snowflake
-		std::vector<uint32_t>& indices,											// Indices
-		Renderer::Material snowflakeMaterial,									// Material
-		Renderer::RenderContext& renderContext);								// Render context
 	Snowflake(glm::vec3 loc, glm::vec3 rotation);								// Constructor for snowflake
 	void moveSnowflake(double time);											// Moves snowflake based on amount of time
+	void renderSnowflake(Scenegraph::GroupNode &node, Renderer::Model &model);	// Render snowflake
 	float returnHeight();														// Returns lowest height
-	float returnX() { return cords[3].x; };										// Returns starting x
-	float returnZ() { return cords[3].z; };										// Returns starting y
+	float returnX() { return location.x; };										// Returns starting x
+	float returnZ() { return location.z; };										// Returns starting y
 };
