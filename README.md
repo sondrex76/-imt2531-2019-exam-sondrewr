@@ -8,7 +8,6 @@
 - When the program runs you will spawn at a set locaiton
 - You can look around by moving your mouse around, and change your camera's location using the buttons on the screen
 	- You are only able to look a specific amount up and down
-	- Currently the mouse detection is weird in that for the y axis it will not allow you to move back again until your mouse is at the same relative location to where it was when you started in the y direction
 - The wasd keys move the raindeer according to the direciton it is facing
 	- If you want to see the raindeer you must move downwards and look around
 - If you want to see more snow you must move further into the map

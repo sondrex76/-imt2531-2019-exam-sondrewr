@@ -239,6 +239,8 @@ int main() {
 	cords[2] = coordinates + glm::vec3(0, SIZE_SNOWFLAKE, 0);
 	cords[3] = coordinates;
 
+	std::cout << "TEST: " << 1 << std::endl;
+
 	glm::vec3 normal = getNormals(cords[0], cords[1], cords[2]); // Normal for side 2
 
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
@@ -265,6 +267,7 @@ int main() {
 	int snowTimer = 0;
 
 	glm::vec3 deerPosition = glm::vec3(0, 0, 0);
+	float angleDown = 0;						// Initial angle downwards
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
@@ -354,8 +357,6 @@ int main() {
 			}
 		}
 
-		std::cout << "DEBUG" << std::endl;
-
 		 // Render the terrain
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(terrainGeometry, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix
@@ -367,7 +368,9 @@ int main() {
 
 		node.addNode(std::move(deerNode));
 		
-		float angleDown = (float)((ypos - previousMousePosY) * SENSITIVITY);
+
+		angleDown += (float)((ypos - previousMousePosY) * SENSITIVITY);
+
 		if (angleDown < -MAX_ANGLE_VERTICAL)
 			angleDown = -MAX_ANGLE_VERTICAL;
 		else if (angleDown > MAX_ANGLE_VERTICAL)
@@ -448,7 +451,7 @@ int main() {
 
 		// Updates mouse Pos coordinates
 		// previousMousePosX = xpos;
-		// previousMousePosY = ypos; 
+		previousMousePosY = ypos; 
 		oldTime = newTime;	//		 Updates oldTime
 	}
 
