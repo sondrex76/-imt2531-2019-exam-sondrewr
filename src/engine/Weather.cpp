@@ -27,17 +27,25 @@ void Snowflake::moveSnowflake(double time) {
 }
 
 void Snowflake::renderSnowflake(Scenegraph::GroupNode &node, Renderer::Model &model) {
-	glm::mat4x4 location =
+	glm::mat4x4 currentLocation =
 		glm::translate(
 			glm::rotate(
-				glm::mat4x4(1.f),
-				(float)(90.f * M_PI / 180.f),		// Angle to rotate
-				glm::vec3(0, 1, 0)					// Axis to rotate around
+				glm::rotate(
+					glm::rotate(
+						glm::mat4x4(1.f),
+						(float)(orientation.x * M_PI / 180.f),		// Angle to rotate
+						glm::vec3(1, 0, 0)							// x
+					),
+					(float)(orientation.y * M_PI / 180.f),			// Angle to rotate
+					glm::vec3(0, 1, 0)								// y
+				),
+				(float)(orientation.z * M_PI / 180.f),				// Angle to rotate
+				glm::vec3(0, 0, 1)									// z
 			),
-			glm::vec3(1, 1, 1)					// Offset/Coordinates
+			location												// Offset/Coordinates
 		);
 
-	node.addNode(std::make_unique<Scenegraph::GeometryNode>(model, location));
+	node.addNode(std::make_unique<Scenegraph::GeometryNode>(model, currentLocation));
 }
 
 float Snowflake::returnHeight() {

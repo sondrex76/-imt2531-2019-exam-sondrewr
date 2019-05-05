@@ -329,8 +329,6 @@ int main() {
 				i--;
 			}
 			else { // Render model
-				std::cout << snowflakes[i].returnHeight() << std::endl;
-
 				snowflakes[i].renderSnowflake(node, snowModel);
 
 				// Make snow ,model
