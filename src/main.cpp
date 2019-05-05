@@ -147,6 +147,8 @@ int main() {
 		}
 	}
 
+	std::cout << "DEBUG: 3" << std::endl;
+
 	// Create vertevies based on heightmap
 	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
 		for (int y = 0; y < SIZE_ENVIORMENT; y++) { // y
@@ -169,19 +171,23 @@ int main() {
 				float height = getHeight(vectors[0], vectors[1], vectors[2]);
 				glm::vec2 uvOffset = textureOffset(height);						// uv offset
 
-				// Upper/right triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
+				if (uvOffset.x == 0.8) {
+					// vectors[0] = vectors[1] = vectors[2] = vectors[3] = vectors[4] = vectors[5] = HEIGHT_STAGES[0] * MAX_HEIGHT * HEIGHT_TERRAIN * SIZE_TERRAIN;
+				}
+					// Upper/right triangle
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
+
+
+					height = getHeight(vectors[3], vectors[4], vectors[5]);
+					uvOffset = textureOffset(height);								// uv offset
+
+					// Lower/left triangle
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
 				
-
-				height = getHeight(vectors[3], vectors[4], vectors[5]);
-				uvOffset = textureOffset(height);								// uv offset
-
-				// Lower/left triangle
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[4]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
-				vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[5]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
 			}
 		}
 	}

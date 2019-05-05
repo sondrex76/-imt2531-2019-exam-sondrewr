@@ -6,14 +6,25 @@ glm::vec3 getNormals(glm::vec3 x, glm::vec3 y, glm::vec3 z) {
 	return glm::normalize(glm::vec3((u.y * v.z) - (u.z * v.y), (u.z * v.x) - (u.x * v.z), abs(u.x * v.y) - (u.y * v.x)));
 }
 
+void switchIfNotOrdered(float & first, float & second) {
+	if (first < second) {
+		float temp = first;
+		first = second;
+		second = temp;
+	}
+}
+
 float getHeight(glm::vec3 x, glm::vec3 y, glm::vec3 z) {
 	// Returns highest y value
-	if (x.y > y.y && x.y > z.y)
-		return x.y;
-	else if (y.y > x.y && y.y > z.y)
-		return y.y;
-	else
-		return z.y;
+
+	// Gets the relevant values
+	float heights[3] = {x.y, y.y, z.y};
+
+	switchIfNotOrdered(heights[0], heights[1]);
+	switchIfNotOrdered(heights[1], heights[2]);
+	switchIfNotOrdered(heights[0], heights[1]);
+
+	return (heights[0] * 0.9 + heights[1] * 0.1);
 }
 
 glm::vec2 textureOffset(float height) {

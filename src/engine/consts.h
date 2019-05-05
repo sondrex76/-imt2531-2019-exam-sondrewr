@@ -23,8 +23,8 @@ const float SPEED_SNOWFLAKE = 0.1f;							// Default speed of snowflake
 const float GRAVITY = 10.0f;								// Strength of gravity
 
 const float HEIGHT_STAGES[] = {								// Height stages(multiplies of max height)
-	0.02,
-	0.06,
+	0.002,
+	0.03,
 	0.1,
 	0.15
 };
