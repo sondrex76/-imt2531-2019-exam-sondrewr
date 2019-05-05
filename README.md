@@ -8,8 +8,7 @@
 - When the program runs you will spawn at a set locaiton
 - You can look around by moving your mouse around, and change your camera's location using the buttons on the screen
 	- You are only able to look a specific amount up and down
-- The wasd keys move the raindeer according to the direciton it is facing
-	- If you want to see the raindeer you must move downwards and look around
+- While in free range camera mode you can manouver wit hwasd, but in third and first person mode you cannot 
 - If you want to see more snow you must move further into the map
 
 ## Functionality
@@ -26,7 +25,4 @@
 
 ## Sources of resources
 Perlin noise: https://en.wikipedia.org/wiki/Perlin_noise
-SNowflake model: https://free3d.com/3d-model/fernlike-stellar-dendrites-snowflake-v1--169045.html
-
-## Known bugs
-- One side of the snow does not render correctly and is just a black square
+Snowflake model: https://free3d.com/3d-model/fernlike-stellar-dendrites-snowflake-v1--169045.html

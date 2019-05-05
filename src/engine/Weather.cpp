@@ -58,7 +58,7 @@ float Snowflake::returnHeight() {
 
 Renderer::Model getSnowModel(Renderer::RenderContext &renderContext) {
 	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
-	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.0001, 0.0001, 0.0001), 0.001f, glm::vec3(0, 0, 0)));
+	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.1, 0.1, 0.1), 32.0f, glm::vec3(0, 0, 0)));
 
 	std::vector<uint32_t> indices;						// indices
 	std::vector<Renderer::Vertex> vertices;				// vector with vertexes

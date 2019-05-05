@@ -351,6 +351,14 @@ int main() {
 			}
 		}
 		else {	// third and first camera
+			if (freeCamera == firstCamera) // first person 
+			{
+
+			}
+			else {	// Third person
+				
+			}
+
 			// Movement forwards, backwards
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {					// W key, move forwards
 				movementVector.z += timeSpent * DEER_SPEED;
