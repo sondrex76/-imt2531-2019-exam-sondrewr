@@ -18,7 +18,7 @@ const float SENSITIVITY = 0.005;							// Camera sensitivity
 const float MAX_ANGLE_VERTICAL = 0.8f;						// Max angle down and up
 const float MOVEMENT_SPEED = 10;							// Movement speed
 const float DISTANCE_LIGHT_SPAWN = 50;						// Distance from camera light source spawns
-const float SIZE_SNOWFLAKE = 100.0f;							// Size of snowflake
+const float SIZE_SNOWFLAKE = 1.0f;							// Size of snowflake
 const float SPEED_SNOWFLAKE = 0.1f;							// Default speed of snowflake
 const float GRAVITY = 10.0f;								// Strength of gravity
 

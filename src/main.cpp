@@ -149,7 +149,6 @@ int main() {
 				heights[i][n] = MAX_HEIGHT * HEIGHT_STAGES[0];
 		}
 	}
-	std::cout << "1" << std::endl;
 
 	// Create vertevies based on heightmap
 	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
@@ -200,11 +199,11 @@ int main() {
 	// Snowflake
 	indices.clear();	// Clears vector so it can be used for snowflake
 	numIndices = 0;		// Resets value so it can be used for snowflake
-	for (int i = 0; i < 12 / 2; i++)	// Goes through the four triangles
+	for (int i = 0; i < 12; i++)	// Goes through the four triangles
 		indices.push_back(numIndices++);
 
 	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
-	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.01, 0.01, 0.01), 3.0f, glm::vec3(0, 0, 0)));
+	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.0001, 0.0001, 0.0001), 0.001f, glm::vec3(0, 0, 0)));
 	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n); // Remove element at position n
 	Snowflake testSnowflake = Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0));
 
@@ -214,7 +213,7 @@ int main() {
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
 	float cameraPosX = 0, cameraPosY = 0;				// Camera values to keep track of camera
-	glm::vec3 CameraCordsOffset(0, 100, 500);				// Camera offset in coordinates
+	glm::vec3 CameraCordsOffset(0, 100, 50);			// Camera offset in coordinates
 
 	// imGui static
 	menuStatic(*window);
@@ -263,7 +262,7 @@ int main() {
 		}
 
 		// x, y, z coordinates of camera and object
-		glm::vec3 cameraPos = glm::vec3(0, 0., 100.);
+		glm::vec3 cameraPos = glm::vec3(0, 0., 50.);
 		glm::vec3 objectPos = glm::vec3(0, 0, 0);		// Node position, changing this changes locaiton both of the object and of the camera
 			
 		// Scenegraph called node

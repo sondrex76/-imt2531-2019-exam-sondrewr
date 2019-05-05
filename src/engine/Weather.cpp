@@ -1,30 +1,32 @@
 #include "Weather.h"
-
+#include <iostream>
 // Returns model of snowflake with correct normals
 Renderer::Model Snowflake::returnSnowflake(std::vector<Renderer::Vertex>& vertices, std::vector<uint32_t>& indices, Renderer::Material snowflakeMaterial, Renderer::RenderContext& renderContext) {
 	vertices.clear();	// Empties vector, needs to be done each time
 
 	glm::vec3 normal = getNormals(cords[0], cords[1], cords[2]); // Normal for side 2
 
+	std::cout << "1";
+
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
 
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{0, 0} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
+
+	normal = getNormals(cords[4], cords[2], cords[0]); // Normal for side 2
+
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
+
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
+	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
 
-	//normal = getNormals(cords[4], cords[2], cords[0]); // Normal for side 2
-
-	//vertices.push_back(Renderer::Vertex{ /*pos*/{cords[4]}, /*norm*/normal, /*uv*/{0, 0} });
-	//vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
-	//vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
-
-	//vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
-	//vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
-	//vertices.push_back(Renderer::Vertex{ /*pos*/{cords[4]}, /*norm*/normal, /*uv*/{0, 0} });
-
-	return Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size() / 2, std::move(snowflakeMaterial), renderContext);
+	return Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(snowflakeMaterial), renderContext);
 }
 
 
