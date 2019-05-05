@@ -8,20 +8,20 @@ Snowflake::Snowflake(glm::vec3 coordinates, glm::vec3 rotation) {
 }
 
 void Snowflake::moveSnowflake(int time) {
+	/*
 	glm::mat4x4 rotationMatrix = glm::rotate(
-		glm::rotate(
-			glm::rotate(
-				glm::mat4x4(1.f),
-				(float)(rotationSpeed.x * M_PI / 180.f * SPEED_SNOWFLAKE),	// x
-				glm::vec3(1, 0, 0)
-			),
-			(float)(rotationSpeed.y * M_PI / 180.f * SPEED_SNOWFLAKE),		// y
-			glm::vec3(0, 1, 0)
-		),
-		(float)(rotationSpeed.z * M_PI / 180.f * SPEED_SNOWFLAKE),			// z
+		glm::mat4x4(1.f),
+		(float)(rotationSpeed.x * M_PI / 180.f * SPEED_SNOWFLAKE),	// x
+		glm::vec3(1, 0, 0)
+	) * glm::rotate(
+		glm::mat4x4(1.f),
+		(float)(rotationSpeed.y * M_PI / 180.f * SPEED_SNOWFLAKE),	// y
+		glm::vec3(0, 1, 0)
+	) * glm::rotate(
+		glm::mat4x4(1.f),
+		(float)(rotationSpeed.z * M_PI / 180.f * SPEED_SNOWFLAKE),	// z
 		glm::vec3(0, 0, 1));
-
-
+		*/
 	// TODO: make rotation work
 	// orientation = glm::vec4(orientation, 0) * rotationMatrix;
 

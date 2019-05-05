@@ -249,7 +249,7 @@ int main() {
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
 
-	normal = getNormals(cords[4], cords[2], cords[0]); // Normal for side 2
+	normal = getNormals(cords[2], cords[3], cords[0]); // Normal for side 2
 
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
@@ -260,9 +260,6 @@ int main() {
 	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
 
 	Renderer::Model snowModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(snowflakeMaterial), renderContext);
-
-	// Debug snowflake
-	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 1, 0)));
 
 	// Snow timer
 	int snowTimer = 0;
@@ -339,10 +336,9 @@ int main() {
 			// SIZE_TERRAIN
 			// std::cout << location.x / SIZE_TERRAIN << ", " << location.y / SIZE_TERRAIN << std::endl;
 
-			if (validLocation(CameraCordsOffset.x + location.x) && validLocation(CameraCordsOffset.z + location.y))
+			if (validLocation(CameraCordsOffset.x / 2 + location.x) && validLocation(CameraCordsOffset.z / 2 + location.y))
 			{
-				snowflakes.push_back(Snowflake(glm::vec3((CameraCordsOffset.x + location.x), SNOW_SPAWN_HEIGHT, (CameraCordsOffset.z + location.y)), glm::vec3(0, 1, 0)));
-				std::cout << "DEBUG: " << (CameraCordsOffset.x + location.x) / SIZE_TERRAIN << ", " << (CameraCordsOffset.z + location.y) / SIZE_TERRAIN << std::endl;
+				snowflakes.push_back(Snowflake(glm::vec3((CameraCordsOffset.x / 2 + location.x), SNOW_SPAWN_HEIGHT, (CameraCordsOffset.z / 2 + location.y)), glm::vec3(0, 1, 0)));
 			}
 		}
 
