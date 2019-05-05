@@ -20,9 +20,9 @@ void main() {
     projectedPos /= projectedPos.w;
     vec3 d = normalize(projectedPos.xyz - camera.position);
 
-    float fade = clamp(d.y, 0, 1);
+    float fade = clamp(d.y, 0., 1.);
 
-    vec3 skyColor = mix(vec3(0.01, 0.0001, 0.0002), vec3(0, 0.1, 0.9), clamp(d.y*20. + 0.5, 0.0, 1));
+    vec3 skyColor = mix(vec3(0.01, 0.0001, 0.0002), vec3(0, 0.1, 0.9), clamp(d.y*20. + 0.5, 0., 1.));
 
     float sunBrightness = step(0.99, dot(d, vec3(0, 0, 1))) * fade;
     vec3 sunColor = mix(
