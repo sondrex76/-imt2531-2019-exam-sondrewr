@@ -197,14 +197,6 @@ int main() {
 
 	std::vector<Renderer::SpotLight> lights; // vector of lights placed by user
 
-	// Snowflake
-	indices.clear();				// Clears vector so it can be used for snowflake
-	numIndices = 0;					// Resets value so it can be used for snowflake
-	for (int i = 0; i < 12; i++)	// Goes through the four triangles
-		indices.push_back(numIndices++);
-
-	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
-	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.0001, 0.0001, 0.0001), 0.001f, glm::vec3(0, 0, 0)));
 	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n);	// Remove element at position n
 	std::vector<Snowflake> snowflakes;							// Vector of snowflakes
 	// Renderer::Model snowflakeTestModel = (Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0))).returnSnowflake(indices, std::move(snowflakeMaterial), renderContext);
@@ -227,47 +219,15 @@ int main() {
 	// Time values, stores the old and current times, in addition to the difference
 	int oldTime = ms.count(), newTime, timeSpent;
 
-	// Snowflake model
-	glm::vec3 cords[4];
-	glm::vec3 coordinates = glm::vec3(0, 0, 0);
-
-	vertices.clear(); // clears vertices
-
-	// Defines coordinates of corners for snowflake
-	cords[0] = coordinates + glm::vec3(SIZE_SNOWFLAKE, SIZE_SNOWFLAKE, 0);
-	cords[1] = coordinates + glm::vec3(SIZE_SNOWFLAKE, 0, 0);
-	cords[2] = coordinates + glm::vec3(0, SIZE_SNOWFLAKE, 0);
-	cords[3] = coordinates;
-
-	std::cout << "TEST: " << 1 << std::endl;
-
-	glm::vec3 normal = getNormals(cords[0], cords[1], cords[2]); // Normal for side 2
-
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
-
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
-
-	normal = getNormals(cords[2], cords[3], cords[0]); // Normal for side 2
-
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{0, 0} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[1]}, /*norm*/normal, /*uv*/{0, 1} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{1, 1} });
-
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[3]}, /*norm*/normal, /*uv*/{0, 0} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[2]}, /*norm*/normal, /*uv*/{1, 0} });
-	vertices.push_back(Renderer::Vertex{ /*pos*/{cords[0]}, /*norm*/normal, /*uv*/{1, 1} });
-
-	Renderer::Model snowModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(snowflakeMaterial), renderContext);
+	Renderer::Model snowModel = getSnowModel(renderContext);
 
 	// Snow timer
-	int snowTimer = 0;
+	int snowTimer = 0;								// Time until snow should spawn
+	glm::vec3 deerPosition = glm::vec3(0, 0, 0);	// Deer
+	float angleDown = 0;							// Initial angle downwards
+	camera currentCamera = freeCamera;				// Current camera type
 
-	glm::vec3 deerPosition = glm::vec3(0, 0, 0);
-	float angleDown = 0;						// Initial angle downwards
+	std::cout << "sfijjf" << std::endl;
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
@@ -335,9 +295,6 @@ int main() {
 		// Spawns snowwhen snowTimer is smaller then 0 and adds waiting time to the waiting
 		for (; snowTimer < 0; snowTimer += WAIT_TIME_SNOW) {
 			glm::vec2 location = glm::vec2(snowLocation(generator), snowLocation(generator)); // Gets grid location of snow
-
-			// SIZE_TERRAIN
-			// std::cout << location.x / SIZE_TERRAIN << ", " << location.y / SIZE_TERRAIN << std::endl;
 
 			if (validLocation(CameraCordsOffset.x / 2 + location.x) && validLocation(CameraCordsOffset.z / 2 + location.y))
 			{

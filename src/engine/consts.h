@@ -24,7 +24,7 @@ const float SPEED_SNOWFLAKE = 0.1f;							// Default speed of snowflake
 const float GRAVITY = 0.05;								// Strength of gravity
 const float DEER_SPEED = 0.03;								// Speed of deer
 const float DEER_SCALE = 1.0f;								// Scale of deer
-const float WAIT_TIME_SNOW = 150;							// Waiting time snow
+const float WAIT_TIME_SNOW = 200;							// Waiting time snow
 const float SNOW_SPAWN_HEIGHT = SIZE_TERRAIN * HEIGHT_TERRAIN * MAX_HEIGHT;
 
 const float HEIGHT_STAGES[] = {								// Height stages(multiplies of max height)
@@ -33,3 +33,5 @@ const float HEIGHT_STAGES[] = {								// Height stages(multiplies of max height
 	0.1,
 	0.15
 };
+
+enum camera {freeCamera, firstCamera, thirdCamera};
