@@ -24,3 +24,5 @@ public:
 	float returnX() { return location.x; };										// Returns starting x
 	float returnZ() { return location.z; };										// Returns starting y
 };
+
+Renderer::Model getSnowModel(Renderer::RenderContext &renderContext);	// Returns snow model

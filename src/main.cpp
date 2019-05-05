@@ -322,40 +322,49 @@ int main() {
 		
 		// Camera
 
+		glm::vec3 movementVector = glm::vec3(0, 0, 0); // vector for how much the camera should move
+
 		// Check what camera mode is being used
-		if (currentCamera == freeCamera) {
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
-				cameraCordsOffset.z += timeSpent * DEER_SPEED;
+		if (currentCamera == freeCamera) {										// Free camera movement
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {					// W key, move forwards
+				movementVector.z += timeSpent * DEER_SPEED;
 			}
-			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
-				cameraCordsOffset.z -= timeSpent * DEER_SPEED;
+			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {			// S key, move back
+				movementVector.z -= timeSpent * DEER_SPEED;
 			}
 
 			// Movement left, right
-			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {			// A key, move left
-				cameraCordsOffset.x -= timeSpent * DEER_SPEED;
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {					// A key, move left
+				movementVector.x -= timeSpent * DEER_SPEED;
 			}
-			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
-				cameraCordsOffset.x += timeSpent * DEER_SPEED;
+			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {			// D key, move right
+				movementVector.x += timeSpent * DEER_SPEED;
+			}
+
+			// Up/down
+			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {				// Space key, move up
+				movementVector.x -= timeSpent * DEER_SPEED;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {	// Shift, downwards
+				movementVector.x += timeSpent * DEER_SPEED;
 			}
 		}
 		else {	// third and first camera
 			// Movement forwards, backwards
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
-				cameraCordsOffset.z += timeSpent * DEER_SPEED;
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {					// W key, move forwards
+				movementVector.z += timeSpent * DEER_SPEED;
 			}
-			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
-				cameraCordsOffset.z -= timeSpent * DEER_SPEED;
+			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {			// S key, move back
+				movementVector.z -= timeSpent * DEER_SPEED;
 			}
 
 			// Movement left, right
-			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {			// A key, move left
-				cameraCordsOffset.x -= timeSpent * DEER_SPEED;
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {					// A key, move left
+				movementVector.x -= timeSpent * DEER_SPEED;
 			}
-			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
-				cameraCordsOffset.x += timeSpent * DEER_SPEED;
+			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {			// D key, move right
+				movementVector.x += timeSpent * DEER_SPEED;
 			}
-			
 		}
 
 		angleDown += (float)((ypos - previousMousePosY) * SENSITIVITY);

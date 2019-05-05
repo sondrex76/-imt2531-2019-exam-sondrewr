@@ -10,4 +10,3 @@ void switchIfNotOrdered(float & first, float & second);					// Switches the valu
 float getHeight(glm::vec3 x, glm::vec3 y, glm::vec3 z);					// Returns highest height of vertex
 glm::vec2 textureOffset(float height);									// Returns the texture offset based on height
 bool validLocation(double location);									// Check if location is validfor snowflake
-Renderer::Model getSnowModel(Renderer::RenderContext &renderContext);	// Returns snow model

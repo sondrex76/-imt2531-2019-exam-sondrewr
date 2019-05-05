@@ -93,27 +93,27 @@ void updateCords(glm::vec3& cameraCordsOffset) {
 	
 	// is in an if else since only one can be true at a time and values is in an array
 	if (moving[0]) {		// left
-		cameraCordsOffset.x -= MOVEMENT_SPEED;
+		cameraCordsOffset.x -= MOVEMENT_SPEED * DEER_MENU_SPEED_MULT;
 		moving[0] = false;
 	}
 	else if (moving[1]) {	// right
-		cameraCordsOffset.x += MOVEMENT_SPEED;
+		cameraCordsOffset.x += MOVEMENT_SPEED * DEER_MENU_SPEED_MULT;
 		moving[1] = false;
 	}
 	else if (moving[2]) {	// Forward
-		cameraCordsOffset.z += MOVEMENT_SPEED;
+		cameraCordsOffset.z += MOVEMENT_SPEED * DEER_MENU_SPEED_MULT;
 		moving[2] = false;
 	}
 	else if (moving[3]) {	// Backward
-		cameraCordsOffset.z -= MOVEMENT_SPEED;
+		cameraCordsOffset.z -= MOVEMENT_SPEED * DEER_MENU_SPEED_MULT;
 		moving[3] = false;
 	}
 	else if (moving[4]) {	// Up
-		cameraCordsOffset.y += MOVEMENT_SPEED;
+		cameraCordsOffset.y += MOVEMENT_SPEED * DEER_MENU_SPEED_MULT;
 		moving[4] = false;
 	}
 	else if (moving[5]) {	// Down
-		cameraCordsOffset.y -= MOVEMENT_SPEED;
+		cameraCordsOffset.y -= MOVEMENT_SPEED * DEER_MENU_SPEED_MULT;
 		moving[5] = false;
 	}
 
