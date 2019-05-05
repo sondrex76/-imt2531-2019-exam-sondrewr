@@ -14,6 +14,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+#include <math.h>
 #include <iostream>
 #include <fstream>
 
@@ -327,26 +328,26 @@ int main() {
 		// Check what camera mode is being used
 		if (currentCamera == freeCamera) {										// Free camera movement
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {					// W key, move forwards
-				movementVector.z += timeSpent * DEER_SPEED;
+				movementVector.z -= timeSpent * DEER_SPEED;
 			}
 			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {			// S key, move back
-				movementVector.z -= timeSpent * DEER_SPEED;
+				movementVector.z += timeSpent * DEER_SPEED;
 			}
 
 			// Movement left, right
 			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {					// A key, move left
-				movementVector.x -= timeSpent * DEER_SPEED;
+				movementVector.x += timeSpent * DEER_SPEED;
 			}
 			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {			// D key, move right
-				movementVector.x += timeSpent * DEER_SPEED;
+				movementVector.x -= timeSpent * DEER_SPEED;
 			}
 
 			// Up/down
 			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {				// Space key, move up
-				movementVector.x -= timeSpent * DEER_SPEED;
+				movementVector.y += timeSpent * DEER_SPEED;
 			}
 			else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {	// Shift, downwards
-				movementVector.x += timeSpent * DEER_SPEED;
+				movementVector.y -= timeSpent * DEER_SPEED;
 			}
 		}
 		else {	// third and first camera
@@ -413,6 +414,16 @@ int main() {
 				)
 			);
 		}
+
+		// Translates movement into the correct direction on the horizontal plane
+		glm::vec2 forwardsVectorZ = glm::normalize(glm::vec2(angle.x, angle.z)) * movementVector.z;	// Gets the direction of the flat plane
+
+		glm::vec3 leftVector = glm::cross(glm::vec3(0, 1, 0), glm::normalize(glm::vec3(angle.x, 0, angle.z)));
+		leftVector *= movementVector.x;
+		leftVector += glm::vec3(forwardsVectorZ.x, movementVector.y, forwardsVectorZ.y);
+
+		// L
+		cameraCordsOffset += leftVector;
 
 		// Camera, remember: x, z is the horizontal plane, y is the vertical
 		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
