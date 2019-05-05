@@ -14,7 +14,7 @@ public:
 	Renderer::Model returnSnowflake(											// Returns model of snowflake
 		std::vector<Renderer::Vertex>& vertices,								// Vertecies
 		std::vector<uint32_t>& indices,											// Indices
-		Renderer::Material& snowflakeMaterial,									// Material
+		Renderer::Material snowflakeMaterial,									// Material
 		Renderer::RenderContext& renderContext);								// Render context
 	Snowflake(glm::vec3 loc, glm::vec3 rotation);								// Constructor for snowflake
 	void moveSnowflake(double time);											// Moves snowflake based on amount of time

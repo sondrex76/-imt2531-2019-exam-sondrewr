@@ -149,6 +149,7 @@ int main() {
 				heights[i][n] = MAX_HEIGHT * HEIGHT_STAGES[0];
 		}
 	}
+	std::cout << "1" << std::endl;
 
 	// Create vertevies based on heightmap
 	for (int x = 0; x < SIZE_ENVIORMENT; x++) { // x
@@ -168,20 +169,18 @@ int main() {
 
 				float height = getHeight(vectors[0], vectors[1], vectors[2]);
 				glm::vec2 uvOffset = textureOffset(height);						// uv offset
-
 					// Upper/right triangle
 					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
 					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[1]}, /*norm*/normal1, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
 					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal1, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
 
-
 					height = getHeight(vectors[2], vectors[3], vectors[0]);
 					uvOffset = textureOffset(height);								// uv offset
 
 					// Lower/left triangle
-					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
-					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 1 + uvOffset.y} });
-					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[2]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 1 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[3]}, /*norm*/normal2, /*uv*/{0.2 + uvOffset.x, 0 + uvOffset.y} });
+					vertices.push_back(Renderer::Vertex{ /*pos*/{vectors[0]}, /*norm*/normal2, /*uv*/{0 + uvOffset.x, 0 + uvOffset.y} });
 			}
 		}
 	}
@@ -201,16 +200,16 @@ int main() {
 	// Snowflake
 	indices.clear();	// Clears vector so it can be used for snowflake
 	numIndices = 0;		// Resets value so it can be used for snowflake
-	for (int i = 0; i < 12; i++)	// Goes through the four triangles
+	for (int i = 0; i < 12 / 2; i++)	// Goes through the four triangles
 		indices.push_back(numIndices++);
 
 	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
-	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.01, 0.01, 0.01), 32.0f, glm::vec3(0, 0, 0)));
+	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.01, 0.01, 0.01), 3.0f, glm::vec3(0, 0, 0)));
 	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n); // Remove element at position n
-	Snowflake testSnowflake = Snowflake(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
+	Snowflake testSnowflake = Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0));
 
 	// make test snowflake model
-	Renderer::Model snowflakeTestModel = testSnowflake.returnSnowflake(vertices, indices, snowflakeMaterial, renderContext);
+	Renderer::Model snowflakeTestModel = testSnowflake.returnSnowflake(vertices, indices, std::move(snowflakeMaterial), renderContext);
 
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
@@ -264,7 +263,7 @@ int main() {
 		}
 
 		// x, y, z coordinates of camera and object
-		glm::vec3 cameraPos = glm::vec3(0, 0., 500.);
+		glm::vec3 cameraPos = glm::vec3(0, 0., 100.);
 		glm::vec3 objectPos = glm::vec3(0, 0, 0);		// Node position, changing this changes locaiton both of the object and of the camera
 			
 		// Scenegraph called node
@@ -279,11 +278,10 @@ int main() {
 				(float)(90.f * M_PI / 180.f),		// Angle to rotate
 				glm::vec3(0, 1, 0)					// Axis to rotate around
 			),
-			glm::vec3(100, 1, 1)						// Offset/Coordinates
+			glm::vec3(1, 1, 1)					// Offset/Coordinates
 			));	
 
 		// Snowflake test
-
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowflakeTestModel, glm::scale(
 			glm::mat4x4(1.f),				// Identity matrix
 			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
@@ -330,7 +328,7 @@ int main() {
 					(float)(360.f * M_PI / 180.f),	// cutoffRadians
 					10.0f,							// focus
 					1.0f,							// ambient
-					100.0f,							// radius
+					10.0f,							// radius
 					1.0f,							// falloff
 					renderContext					// renderContext
 				)
