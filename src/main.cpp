@@ -256,8 +256,6 @@ int main() {
 			if (timeCameraSwitched + MIN_TIME_CAMERA < newTime) {	// Checks if enough time have passed
 				timeCameraSwitched = newTime;
 
-				std::cout << newTime << std::endl;
-
 				if (currentCamera == freeCamera)
 					currentCamera = firstCamera;
 				else if (currentCamera == firstCamera)
@@ -267,24 +265,8 @@ int main() {
 			}
 		}
 
-		// x, y, z coordinates of camera and object
-		glm::vec3 cameraPos = glm::vec3(0, 0., 50.);
-		glm::vec3 objectPos = glm::vec3(0, 0, 0);		// Node position, changing this changes locaiton both of the object and of the camera
-			
 		// Scenegraph called node
-		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), objectPos));					// Primary node
-		auto deerNode = std::make_unique<Scenegraph::GroupNode>(									// Node of deer
-			glm::translate(
-			glm::rotate(
-				glm::scale(
-					glm::mat4x4(1.f),								// Identity matrix
-					glm::vec3(DEER_SCALE, DEER_SCALE, DEER_SCALE)	// Scale
-				),
-				(float)(90.f * M_PI / 180.f),						// Angle to rotate
-				glm::vec3(0, 1, 0)									// Axis to rotate around
-			),
-			deerPosition					// Offset/Coordinates
-			));	
+		Scenegraph::GroupNode node(glm::translate(glm::mat4x4(1.f), glm::vec3(0, 0, 0)));	// Primary node
 
 		// Generates snowflakes
 		snowTimer -= timeSpent;
@@ -315,11 +297,6 @@ int main() {
 			glm::mat4x4(1.f),				// Identity matrix
 			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
 		)));
-
-		// Deer model, it is in its own node because previouly it was split into three models
-		deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deer, glm::mat4x4(1.f)));
-
-		node.addNode(std::move(deerNode));
 		
 		// Camera
 
@@ -385,7 +362,7 @@ int main() {
 
 		// Angle towards object
 		glm::vec4 angle = glm::normalize(
-			glm::vec4(cameraPos, 0) * 
+			glm::vec4(0, 0., 50., 0) *
 			glm::rotate(																			// Horizontal
 				glm::mat4x4(1.f),																	// Identify matrix
 				angleDown,																			// Angle to rotate
@@ -396,6 +373,38 @@ int main() {
 				(float)((previousMousePosX - xpos) * SENSITIVITY),									// Angle to rotate
 				glm::vec3(0, 1, 0)																	// Defines the up direction
 			));
+
+		// Camera, remember: x, z is the horizontal plane, y is the vertical
+		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
+			cameraCordsOffset,																	// pos
+			angle,																				// forward
+			glm::vec3(0., 1., 0.),                     											// up
+			60.f * M_PI / 180.f,                                      							// fov
+			(float)windowWidth / (float)windowHeight, 											// aspect
+			0.01f,                                     											// near z
+			20000.f                                     										// far z
+			));
+
+		// Deer node and model, only rendered in third and free mode
+		if (currentCamera != firstCamera) { // Checks if camera is not first person view
+			auto deerNode = std::make_unique<Scenegraph::GroupNode>(									// Node of deer
+				glm::translate(
+					glm::rotate(
+						glm::scale(
+							glm::mat4x4(1.f),								// Identity matrix
+							glm::vec3(DEER_SCALE, DEER_SCALE, DEER_SCALE)	// Scale
+						),
+						(float)(90.f * M_PI / 180.f),						// Angle to rotate
+						glm::vec3(0, 1, 0)									// Axis to rotate around
+					),
+					deerPosition					// Offset/Coordinates
+				));
+
+			// Deer model, it is in its own node because previouly it was split into three models
+			deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deer, glm::mat4x4(1.f)));
+
+			node.addNode(std::move(deerNode));
+		}
 
 		// Places new light into vector
 		if (placeLightNode) {
@@ -433,16 +442,6 @@ int main() {
 		// L
 		cameraCordsOffset += leftVector;
 
-		// Camera, remember: x, z is the horizontal plane, y is the vertical
-		node.addNode(std::make_unique<Scenegraph::PerspectiveCameraNode>(						// Camera
-			cameraCordsOffset,																	// pos
-			angle,																				// forward
-			glm::vec3(0., 1., 0.),                     											// up
-			60.f * M_PI / 180.f,                                      							// fov
-			(float)windowWidth / (float)windowHeight, 											// aspect
-			0.01f,                                     											// near z
-			20000.f                                     										// far z
-			));
 
 		
 		// Ambient light
