@@ -21,7 +21,9 @@ const float MOVEMENT_SPEED = 10;							// Movement speed
 const float DISTANCE_LIGHT_SPAWN = 50;						// Distance from camera light source spawns
 const float SIZE_SNOWFLAKE = 10.0f;							// Size of snowflake
 const float SPEED_SNOWFLAKE = 0.1f;							// Default speed of snowflake
-const float GRAVITY = 0.01;									// Strength of gravity
+const float GRAVITY = 0.0001;								// Strength of gravity
+const float DEER_SPEED = 0.005;								// Speed of deer
+const float DEER_SCALE = 1.0f;								// Scale of deer
 
 const float HEIGHT_STAGES[] = {								// Height stages(multiplies of max height)
 	0.002,

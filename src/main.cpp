@@ -224,7 +224,8 @@ int main() {
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 
-	int oldTime = ms.count(), newTime;
+	// Time values, stores the old and current times, in addition to the difference
+	int oldTime = ms.count(), newTime, timeSpent;
 
 	// Snowflake model
 	glm::vec3 cords[4];
@@ -261,14 +262,17 @@ int main() {
 	Renderer::Model snowModel = Renderer::Model::fromGeometry(&vertices[0], 12, &indices[0], indices.size(), std::move(snowflakeMaterial), renderContext);
 
 	// Debug snowflake
-	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 0, 0)));
+	snowflakes.push_back(Snowflake(glm::vec3(0, 100, 0), glm::vec3(0, 1, 0)));
+
+	glm::vec3 deerPosition = glm::vec3(0, 0, 0);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
 		ms = std::chrono::duration_cast<std::chrono::milliseconds>(
 			std::chrono::system_clock::now().time_since_epoch()
 			);
-		newTime = ms.count();	// Updates newTime
+		newTime = ms.count();			// Updates newTime
+		timeSpent = newTime - oldTime;	// Gets time value
 
 		menuDynamic();					// dynamic imGUI
 		updateCords(CameraCordsOffset);	// Updates coordinates
@@ -288,18 +292,18 @@ int main() {
 
 		// Movement forwards, backwards
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {			// W key, move forwards
-
+			deerPosition.z += timeSpent * DEER_SPEED;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {	// S key, move back
-
+			deerPosition.z -= timeSpent * DEER_SPEED;
 		}
 		
 		// Movement left, right
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {	// A key, move left
-
+			deerPosition.x -= timeSpent * DEER_SPEED;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {	// D key, move right
-
+			deerPosition.x += timeSpent * DEER_SPEED;
 		}
 
 		// x, y, z coordinates of camera and object
@@ -312,18 +316,18 @@ int main() {
 			glm::translate(
 			glm::rotate(
 				glm::scale(
-					glm::mat4x4(1.f),				// Identity matrix
-					glm::vec3(40.0f, 40.0f, 40.0f)	// Scale
+					glm::mat4x4(1.f),								// Identity matrix
+					glm::vec3(DEER_SCALE, DEER_SCALE, DEER_SCALE)	// Scale
 				),
-				(float)(90.f * M_PI / 180.f),		// Angle to rotate
-				glm::vec3(0, 1, 0)					// Axis to rotate around
+				(float)(90.f * M_PI / 180.f),						// Angle to rotate
+				glm::vec3(0, 1, 0)									// Axis to rotate around
 			),
-			glm::vec3(1, 1, 1)					// Offset/Coordinates
+			deerPosition					// Offset/Coordinates
 			));	
 
 
 		for (int i = 0; i < snowflakes.size(); i++) { // Goes through all current snowflakes
-			snowflakes[i].moveSnowflake(newTime - oldTime); // Updates position
+			snowflakes[i].moveSnowflake(timeSpent); // Updates position
 
 			if (snowflakes[i].returnHeight() < heights[(int)(snowflakes[i].returnX())][(int)(snowflakes[i].returnZ())]) { // Checks if snowflake should be deleted
 				snowflakes.erase(snowflakes.begin() + i);
@@ -331,11 +335,6 @@ int main() {
 			}
 			else { // Render model
 				snowflakes[i].renderSnowflake(node, snowModel);
-
-				node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowModel, glm::scale(
-					glm::mat4x4(1.f),				// Identity matrix
-					glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
-				)));
 			}
 		}
 

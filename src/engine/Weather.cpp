@@ -8,9 +8,7 @@ Snowflake::Snowflake(glm::vec3 coordinates, glm::vec3 rotation) {
 }
 
 void Snowflake::moveSnowflake(int time) {
-	std::cout << "test: " << time << std::endl;
-	/*
-	orientation = glm::vec4(orientation, 0) * 
+	orientation = glm::vec4(orientation, 1) * 
 		glm::rotate(
 			glm::rotate(
 				glm::rotate(
@@ -23,7 +21,9 @@ void Snowflake::moveSnowflake(int time) {
 			),
 			(float)(rotationSpeed.z * M_PI / 180.f * SPEED_SNOWFLAKE),			// z
 			glm::vec3(0, 0, 1));
-			*/
+
+
+			
 	location = location + glm::vec3(0, -time * GRAVITY, 0);
 }
 
