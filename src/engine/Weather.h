@@ -11,7 +11,8 @@ private:
 	glm::vec3 rotationSpeed;	// Rotation speed per axis
 	glm::vec3 cords[4];			// Coordinates
 public:
-	Renderer::Model returnSnowflake(std::vector<Renderer::Vertex>& vertices,	// Returns model of snowflake
+	Renderer::Model returnSnowflake(											// Returns model of snowflake
+		std::vector<Renderer::Vertex>& vertices,								// Vertecies
 		std::vector<uint32_t>& indices,											// Indices
 		Renderer::Material& snowflakeMaterial,									// Material
 		Renderer::RenderContext& renderContext);								// Render context

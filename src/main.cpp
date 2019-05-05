@@ -39,13 +39,14 @@
 #include "engine/Functions.h"
 #include "engine/PerlinNoise.h"
 #include "engine/Menu.h"
+#include "engine/Weather.h"
 
 #include "renderer/SpotLight.h"
 #include "renderer/AmbientLight.h"
 
-// Global values of gradiant
-float globalGradient[SIZE_ZONES][SIZE_ZONES][2];
-bool moving[6] = { false, false, false, false, false, false };
+
+float globalGradient[SIZE_ZONES][SIZE_ZONES][2];					// Global values of gradiant
+bool moving[6] = { false, false, false, false, false, false };		// Bools indicating if the movement buttons are clicked
 
 int main() {
 	if (!glfwInit()) {
@@ -93,7 +94,7 @@ int main() {
 	Renderer::ShadowDirectionalLight sunLight(
 		Renderer::DirectionalLight(
 			glm::normalize(glm::vec3(0, 0.5, 1)),	// Direction
-			SUN_LIGHT_COLOR,					// Color
+			SUN_LIGHT_COLOR,						// Color
 			0,
 			renderContext
 		),
@@ -195,10 +196,9 @@ int main() {
 	// Generates material and actual terrain
 	Renderer::Model terrainGeometry = Renderer::Model::fromGeometry(&vertices[0], pow(SIZE_ENVIORMENT - 1, 2) * 6, &indices[0], indices.size(), std::move(terrainMaterial), renderContext);
 
-	std::vector<Renderer::SpotLight> lights; // vector of lights
+	std::vector<Renderer::SpotLight> lights; // vector of lights placed by user
 
 	// Snowflake
-	vertices.clear();	// Clears vector so it can be used for snowflake
 	indices.clear();	// Clears vector so it can be used for snowflake
 	numIndices = 0;		// Resets value so it can be used for snowflake
 	for (int i = 0; i < 12; i++)	// Goes through the four triangles
@@ -207,6 +207,10 @@ int main() {
 	Renderer::ImageTexture snowflakeTexture(Renderer::ImageTexture::fromFile("resources/Textures/Snowflake.png"));
 	Renderer::Material snowflakeMaterial(Renderer::Material(std::move(snowflakeTexture), glm::vec3(0.01, 0.01, 0.01), 32.0f, glm::vec3(0, 0, 0)));
 	// snowflakeDegrees.erase(snowflakeDegrees.begin() + n); // Remove element at position n
+	Snowflake testSnowflake = Snowflake(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
+
+	// make test snowflake model
+	Renderer::Model snowflakeTestModel = testSnowflake.returnSnowflake(vertices, indices, snowflakeMaterial, renderContext);
 
 	// Mouse pos
 	float previousMousePosX = 0, previousMousePosY = 0; // Previous mosePos
@@ -275,8 +279,15 @@ int main() {
 				(float)(90.f * M_PI / 180.f),		// Angle to rotate
 				glm::vec3(0, 1, 0)					// Axis to rotate around
 			),
-			glm::vec3(1, 1, 1)						// Offset/Coordinates
+			glm::vec3(100, 1, 1)						// Offset/Coordinates
 			));	
+
+		// Snowflake test
+
+		node.addNode(std::make_unique<Scenegraph::GeometryNode>(snowflakeTestModel, glm::scale(
+			glm::mat4x4(1.f),				// Identity matrix
+			glm::vec3(1.0f, 1.0f, 1.0f)		// Scale
+			)));
 
 		 // Render the terrain
 		node.addNode(std::make_unique<Scenegraph::GeometryNode>(terrainGeometry, glm::scale(
@@ -327,7 +338,7 @@ int main() {
 		}
 
 		// std::vector<Scenegraph::LightNode<Renderer::SpotLight>> lights;
-		// Draw all lights inside of lights
+		// Draw all lights inside of the lights vector
 		for (int i = 0; i < lights.size(); i++) {
 			node.addNode(std::make_unique<Scenegraph::LightNode<Renderer::SpotLight>>(
 				Renderer::SpotLight(lights[i]), glm::mat4x4(1.f)
