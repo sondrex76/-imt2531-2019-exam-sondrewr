@@ -6,10 +6,11 @@
 
 ## Use
 - When the program runs you will spawn at a set locaiton
-- You can look around by moving your mouse around, and change your camera's location using the buttons on the screen
+- You can look around by moving your mouse around, and change your camera's location using the buttons on the screen or hitting wasd
 	- You are only able to look a specific amount up and down
-- While in free range camera mode you can manouver wit hwasd, but in third and first person mode you cannot 
-- If you want to see more snow you must move further into the map
+- You can change camera mode by hitting 't'
+- While in free range camera mode you can manouver with wasd, but in third and first person mode you cannot 
+- If you want to see more snow you must move further into the map or mvoe upwards
 
 ## Functionality
 - A randomly generated map is generated each time you run the program, the terrain uses perlin noise for its terrain generation
@@ -23,6 +24,12 @@
 - There is a source of light that makes shadows
 - There is a skybox and a rendered sun on the horizon, the sky is blue and the void is a dark red
 
+## WIP
+- The third and first person view are not finished and I did not get to implement walking even though it would be relatively "simple" using the heightmap and a height checking system similar to what the snowflakes use
+- I wanted to use some form of noise generation such as Fractional Brownian Motion). to generate the random values used for the perlin nose used for terran generation but did not have the time
+
 ## Sources of resources
 Perlin noise: https://en.wikipedia.org/wiki/Perlin_noise
-Snowflake model: https://free3d.com/3d-model/fernlike-stellar-dendrites-snowflake-v1--169045.html
+
+## Known bugs
+The deer are not on the correct place after using first and third person view
