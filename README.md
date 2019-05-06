@@ -27,7 +27,6 @@
 - When the raindeer moves it will follow the slope of the terrain
 
 ## WIP
-- The third person view is not finished(and bearly started on to be honest)
 - I wanted to use some form of noise generation such as Fractional Brownian Motion). to generate the random values used for the perlin nose used for terran generation but did not have the time
 - Main has too much code in it, if I had more time I would have prioritised splitting it and moving various pieces of code into new and/or relevant files
 
@@ -36,3 +35,4 @@
 
 ## Known bugs
 - You move faster diagonally then stright since I am not normalizing the speed based on direction
+- Movement over terrain is based on the camera's position, not the model's at the moment
