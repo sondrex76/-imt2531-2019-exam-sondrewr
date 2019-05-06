@@ -5,7 +5,7 @@
 const glm::vec3 SUN_LIGHT_COLOR(1, 1, 0.2);
 const glm::vec3 PASSIVE_LIGHT_COLOR(0.2, 0.2, 0.2);
 const glm::vec3 DEER_FIRST_HEIGHT_OFFSET = glm::vec3(0, 6, 0);	// y offset in camera height in first person
-const glm::vec3 DEER_THIRD_HEIGHT_OFFSET = glm::vec3(0, 10, 10);	// y offset in camera height in third person
+const glm::vec3 DEER_THIRD_HEIGHT_OFFSET = glm::vec3(0, 10, 0);	// y offset in camera height in third person
 
 const int SIZE_ENVIORMENT = 450;								// Number of points
 const int SIZE_DIVIDER = 90;									// Number of points per row

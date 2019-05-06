@@ -353,9 +353,13 @@ int main() {
 				deerPosition = cameraCordsOffset - DEER_FIRST_HEIGHT_OFFSET; // sets position of deer
 			}
 			else {	// Third person
-				deerPosition = cameraCordsOffset - DEER_THIRD_HEIGHT_OFFSET; // sets position of deer
+				glm::vec2 forwardsVectorZ = glm::normalize(glm::vec2(angle.x, angle.z)) * DEER_THIRD_HEIGHT_OFFSET.z;	// Gets the direction of the flat plane
 
+				glm::vec3 leftVector = glm::cross(glm::vec3(0, 1, 0), glm::normalize(glm::vec3(angle.x, 0, angle.z)));
+				leftVector *= DEER_THIRD_HEIGHT_OFFSET.x;
+				leftVector += glm::vec3(forwardsVectorZ.x, DEER_THIRD_HEIGHT_OFFSET.y, forwardsVectorZ.y);
 
+				deerPosition = cameraCordsOffset - leftVector;
 			}
 
 			// Movement forwards, backwards
