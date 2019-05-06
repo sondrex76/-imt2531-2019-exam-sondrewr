@@ -229,7 +229,7 @@ int main() {
 		timeSpent = newTime - oldTime;	// Gets time value
 
 		menuDynamic();					// dynamic imGUI
-		updateCords(cameraCordsOffset);	// Updates coordinates
+		updateCords(cameraCordsOffset);	// Updates coordinates coming from button presses
 		bool placeLightNode = placeLight();	// Checks if light should be placed
 
 		int windowWidth, windowHeight;
@@ -387,8 +387,6 @@ int main() {
 
 			if (validLocation(posValue[0]) && validLocation(posValue[1])) {		// Ensures location is valid
 				// Makes deer move upwards and downwards with the terrain
-
-				std::cout << posValue[0] << ", " << posValue[1] << ", " <<  posValue[2] << ", " << cameraCordsOffset.y << std::endl;
 
 				if (posValue[2] > (cameraCordsOffset.y)) {
 					cameraCordsOffset.y += DEER_UPWARDS_MOVEMENT * timeSpent;
