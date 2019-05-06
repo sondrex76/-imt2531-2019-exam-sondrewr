@@ -427,7 +427,7 @@ int main() {
 							glm::mat4x4(1.f),								// Identity matrix
 							glm::vec3(DEER_SCALE, DEER_SCALE, DEER_SCALE)	// Scale
 						),
-						(float)(90.f * M_PI / 180.f),						// Angle to rotate
+						(float)(0 * M_PI / 180.f),							// Angle to rotate
 						glm::vec3(0, 1, 0)									// Axis to rotate around
 					),
 					deerPosition					// Offset/Coordinates

@@ -35,5 +35,4 @@
 - Perlin noise: https://en.wikipedia.org/wiki/Perlin_noise
 
 ## Known bugs
-- The deer moves 90 degrees to the right compared to the camera
 - You move faster diagonally then stright since I am not normalizing the speed based on direction
