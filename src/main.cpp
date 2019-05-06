@@ -213,12 +213,13 @@ int main() {
 
 	Renderer::Model snowModel = getSnowModel(renderContext);
 
-	// Snow timer
+	// Various values used in the game loop
 	int snowTimer = 0;								// Time until snow should spawn
 	glm::vec3 deerPosition = glm::vec3(0, 10, 0);	// Deer starting position
 	float angleDown = 0;							// Initial angle downwards
 	camera currentCamera = freeCamera;				// Current camera type
 	long long timeCameraSwitched = 0;				// The last time the camera mode switched
+	float rotationDeer = 0;							// How much the deer should be rotated
 
 	// Game loop
 	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
@@ -360,6 +361,8 @@ int main() {
 				leftVector += glm::vec3(forwardsVectorZ.x, DEER_THIRD_HEIGHT_OFFSET.y, forwardsVectorZ.y);
 
 				deerPosition = cameraCordsOffset - leftVector;
+
+				rotationDeer = atan2 (-angle.x, -angle.z); glm::normalize(glm::vec2(angle.x, angle.z)); // +z is default direction, x is right
 			}
 
 			// Movement forwards, backwards
@@ -440,8 +443,7 @@ int main() {
 					deerPosition					// Offset/Coordinates
 				));
 
-			// Deer model, it is in its own node because previouly it was split into three models
-			deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deer, glm::mat4x4(1.f)));
+			deerNode->addNode(std::make_unique<Scenegraph::GeometryNode>(deer, glm::rotate(glm::mat4x4(1), rotationDeer, glm::vec3(0, 1, 0))));
 
 			node.addNode(std::move(deerNode));
 		}
