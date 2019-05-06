@@ -58,7 +58,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);	// Use all the call functions, load this version of OpenGl and nothing else
 
 	// Creates window, or on a fail it instead terminates
-	auto window = glfwCreateWindow(1280, 720, "ARFRD", nullptr, nullptr);
+	auto window = glfwCreateWindow(1280, 720, "Exam", nullptr, nullptr);
 	if (!window) {
 		glfwTerminate();
 		GFX_ERROR("Failed to create a GLFW window");
