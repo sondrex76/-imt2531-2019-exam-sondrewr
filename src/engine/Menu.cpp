@@ -116,19 +116,6 @@ void updateCords(glm::vec3& cameraCordsOffset) {
 		cameraCordsOffset.y -= MOVEMENT_SPEED * DEER_MENU_SPEED_MULT;
 		moving[5] = false;
 	}
-
-	// Display cords
-	ImGuiWindowFlags window_flags = runFlags();
-	ImGui::SetNextWindowPos(ImVec2(BUTTON_SIZE + PADDING, PADDING));
-	ImGui::SetNextWindowSize(ImVec2(450, 60));
-	{
-		ImGui::Begin("ButtonsUpDown", nullptr, window_flags);
-
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Coordinates x: %d, y: %d, z: %d", cameraCordsOffset.x, cameraCordsOffset.y, cameraCordsOffset.z);
-
-		ImGui::End();
-	}
-
 }
 
 bool placeLight() {

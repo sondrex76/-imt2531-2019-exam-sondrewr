@@ -229,7 +229,6 @@ int main() {
 		timeSpent = newTime - oldTime;	// Gets time value
 
 		menuDynamic();					// dynamic imGUI
-		updateCords(cameraCordsOffset);	// Updates coordinates coming from button presses
 		bool placeLightNode = placeLight();	// Checks if light should be placed
 
 		int windowWidth, windowHeight;
@@ -245,17 +244,17 @@ int main() {
 			previousMousePosY = ypos;
 
 		// switch camera mode
-		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {			// A key, move left
-			if (timeCameraSwitched + MIN_TIME_CAMERA < newTime) {	// Checks if enough time have passed
+		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {							// A key, move left
+			if (timeCameraSwitched + MIN_TIME_CAMERA < newTime) {					// Checks if enough time have passed
 				timeCameraSwitched = newTime;
 
 				if (currentCamera == freeCamera) {
-					currentCamera = firstCamera;		// Sets the camera mode to its next stage
-					cameraCordsOffset = deerPosition + glm::vec3(0, DEER_FIRST_HEIGHT_OFFSET, 0);	// Sets current position to that of the deer
+					currentCamera = firstCamera;									// Sets the camera mode to its next stage
+					cameraCordsOffset = deerPosition + DEER_FIRST_HEIGHT_OFFSET;	// Sets current position to that of the deer
 				}
 				else if (currentCamera == firstCamera) {
-					currentCamera = thirdCamera;		// Sets the camera mode to its next stage
-					cameraCordsOffset = deerPosition + glm::vec3(0, DEER_THIRD_HEIGHT_OFFSET, 0);	// Sets current position to that of the deer
+					currentCamera = thirdCamera;									// Sets the camera mode to its next stage
+					cameraCordsOffset = deerPosition + DEER_THIRD_HEIGHT_OFFSET;	// Sets current position to that of the deer
 				}
 				else	// Third person perspective
 					currentCamera = freeCamera;
@@ -323,6 +322,8 @@ int main() {
 
 		// Check what camera mode is being used
 		if (currentCamera == freeCamera) {										// Free camera movement
+			updateCords(cameraCordsOffset);										// Updates coordinates coming from button(on screen) presses
+
 			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {					// W key, move forwards
 				movementVector.z -= timeSpent * DEER_SPEED;
 			}
