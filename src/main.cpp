@@ -388,9 +388,9 @@ int main() {
 				0																// Height value based on camera mode, is updated below
 			};
 
-			posValue[2] = heights[posValue[0]][posValue[1]] * SIZE_TERRAIN * HEIGHT_TERRAIN +
+			posValue[2] = heights[posValue[0]][posValue[1]] * SIZE_TERRAIN * HEIGHT_TERRAIN/* +
 				(currentCamera == firstCamera ? (DEER_FIRST_HEIGHT_OFFSET.y) :
-				(DEER_THIRD_HEIGHT_OFFSET.y));
+				(DEER_THIRD_HEIGHT_OFFSET.y))*/;
 
 			movementVector.x *= DEER_SPEED;	// Modifies the added movement based on the deer's speed
 			movementVector.z *= DEER_SPEED;	
@@ -398,10 +398,10 @@ int main() {
 			if (validLocation(posValue[0]) && validLocation(posValue[1])) {		// Ensures location is valid
 				// Makes deer move upwards and downwards with the terrain
 
-				if (posValue[2] > (cameraCordsOffset.y)) {
+				if (posValue[2] > (deerPosition.y)) {
 					cameraCordsOffset.y += DEER_UPWARDS_MOVEMENT * timeSpent;
 				}
-				else if (posValue[2] < (cameraCordsOffset.y - ALLOWED_VARIANCE_DOWN)) {
+				else if (posValue[2] < (deerPosition.y - ALLOWED_VARIANCE_DOWN)) {
 					cameraCordsOffset.y -= GRAVITY * timeSpent;
 				}
 			}
