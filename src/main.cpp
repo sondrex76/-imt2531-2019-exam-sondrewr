@@ -383,8 +383,8 @@ int main() {
 
 			// Value used in if statement below so tha tthe same calculations need not be done twice
 			int posValue[] = {													// Values used to calculate if deer should move upwards or downwards
-				(int)(cameraCordsOffset.x / SIZE_TERRAIN),						// x			
-				(int)(cameraCordsOffset.z / SIZE_TERRAIN),						// z
+				(int)(deerPosition.x / SIZE_TERRAIN),						// x			
+				(int)(deerPosition.z / SIZE_TERRAIN),						// z
 				0																// Height value based on camera mode, is updated below
 			};
 
