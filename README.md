@@ -25,7 +25,7 @@
 - There is a skybox and a rendered sun on the horizon, the sky is blue and the void is a dark red
 
 ## WIP
-- The third and first person view are not finished and I did not get to implement walking even though it would be relatively "simple" using the heightmap and a height checking system similar to what the snowflakes use
+- The third person view is not finished
 - I wanted to use some form of noise generation such as Fractional Brownian Motion). to generate the random values used for the perlin nose used for terran generation but did not have the time
 - Main has too much code in it, if I had more time I would have prioritised splitting it and moving various pieces of code into new and/or relevant files
 
