@@ -2,15 +2,15 @@
 
 ## Deployment process
 - Clone the repository then open CMakeLists.txt within the primary folder with cmake
-- Run Exam-imt2531-2019.exe through cmake
+- Run Exam-imt2531-2019.exe through cmake using x64(x64-Debug is the one I used)
 
 ## Use
 - When the program runs you will spawn at a set locaiton
 - You can look around by moving your mouse around, and change your camera's location using the buttons on the screen or hitting wasd + space and left shift
 	- You are only able to look a specific amount up and down
-- You can change camera mode by hitting 't'
+- You can change camera mode by hitting 't', it will cycle between first, thirs and free, the raindeer model is only rendered in third and free camera mode
 - While in free range camera mode you can manouver with wasd, but in third and first person mode you cannot 
-- If you want to see more snow you must move further into the map or mvoe upwards
+- The snow will fall around you, but it spawns high
 
 ## Functionality
 - A randomly generated map is generated based on the perlin noise algorithm
@@ -35,4 +35,3 @@
 
 ## Known bugs
 - You move faster diagonally then stright since I am not normalizing the speed based on direction
-- Movement over the terrain, while based on the deer's position, makes it clip through the enviorment on steeper slopes
