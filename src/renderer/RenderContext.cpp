@@ -10,11 +10,6 @@ RenderContext::RenderContext()
       m_spotLightProgram(ShaderProgram::computeProgram("spotLight.compute")),
       m_ambientLightProgram(ShaderProgram::computeProgram("ambientLight.compute")),
 
-#ifdef RENDER_LIGHT_DEBUG
-      m_debugFrustumLines(24, GL_ARRAY_BUFFER, GL_STATIC_DRAW),
-      m_debugLightFrustum(ShaderProgram::vertexFragProgram("debug_lightFrustum.vert", "debug_lightFrustum.frag")),
-#endif
-
 	  m_postSkyboxProgram(ShaderProgram::computeProgram("post_skybox.compute")),
       m_postDistanceFogProgram(ShaderProgram::computeProgram("post_distanceFog.compute")),
       m_postBloomExtractProgram(ShaderProgram::computeProgram("post_bloomExtract.compute")),
@@ -49,52 +44,6 @@ RenderContext::RenderContext()
     m_renderToScreenVertices.upload(6, quadBufferData);
     m_renderToScreenArray.addAttrib(2, 2, 0);
     m_renderToScreenArray.unbind();
-
-#ifdef RENDER_LIGHT_DEBUG
-    static const glm::vec3 debugFrustumData[] = {
-        glm::vec3(-1,  1,  1),
-        glm::vec3(1,  1,  1),
-
-        glm::vec3(1,  1,  1),
-        glm::vec3(1, -1,  1),
-
-        glm::vec3(1, -1,  1),
-        glm::vec3(-1, -1,  1),
-
-        glm::vec3(-1, -1,  1),
-        glm::vec3(-1,  1,  1),
-
-
-        glm::vec3(-1,  1, 0),
-        glm::vec3(1,  1, 0),
-
-        glm::vec3(1,  1, 0),
-        glm::vec3(1, -1, 0),
-
-        glm::vec3(1, -1, 0),
-        glm::vec3(-1, -1, 0),
-
-        glm::vec3(-1, -1, 0),
-        glm::vec3(-1,  1, 0),
-
-
-        glm::vec3(-1,  1,  1),
-        glm::vec3(-1,  1, 0),
-
-        glm::vec3(1,  1,  1),
-        glm::vec3(1,  1, 0),
-
-        glm::vec3(1, -1,  1),
-        glm::vec3(1, -1, 0),
-
-        glm::vec3(-1, -1,  1),
-        glm::vec3(-1, -1, 0)
-    };
-    m_debugFrustumArray.bind();
-    m_debugFrustumLines.upload(24, debugFrustumData);
-    m_debugFrustumArray.addAttrib(3, 3, 0);
-    m_debugFrustumArray.unbind();
-#endif
 }
 
 void RenderContext::render(int screenWidth, int screenHeight, const Scenegraph::Node &node) {

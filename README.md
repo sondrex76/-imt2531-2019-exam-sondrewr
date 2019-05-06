@@ -13,7 +13,7 @@
 - If you want to see more snow you must move further into the map or mvoe upwards
 
 ## Functionality
-- A randomly generated map is generated each time you run the program, the terrain uses perlin noise for its terrain generation
+- A randomly generated map is generated based on the perlin noise algorithm
 - Elevations are textured by different textures based on height
 - A raindeer is rendered, move down to see it
 - Snow spawns at a set height above the map and despawns when it reaches the height of the ground

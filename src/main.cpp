@@ -18,10 +18,6 @@
 #include <iostream>
 #include <fstream>
 
-// Sound
-// #include <Windows.h>
-// #pragma comment(lib, "winmm.lib")
-
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <chrono>
@@ -87,9 +83,6 @@ int main() {
 
 	// Models
 	Renderer::Model deer = Renderer::Model::fromObjFile("deer/deer.obj", renderContext);
-
-	// Sound
-	// PlaySound("resources/Sound/<name of file>.wav", NULL, SND_LOOP | SND_ASYNC);
 
 	// Sun
 	Renderer::ShadowDirectionalLight sunLight(
@@ -354,11 +347,9 @@ int main() {
 			}
 		}
 		else {	// third and first camera
-
 			if (currentCamera == firstCamera) // first person 
 			{
 				deerPosition = cameraCordsOffset - glm::vec3(0, DEER_FIRST_HEIGHT_OFFSET, 0); // sets position of deer
-
 			}
 			else {	// Third person
 				deerPosition = cameraCordsOffset - glm::vec3(0, DEER_THIRD_HEIGHT_OFFSET, 0); // sets position of deer
@@ -378,6 +369,19 @@ int main() {
 			}
 			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {			// D key, move right
 				movementVector.x -= timeSpent * DEER_SPEED;
+			}
+
+			// Value used in if statement below so tha tthe same calculations need not be done twice
+			int posValue[] = { (int)(cameraCordsOffset.x / SIZE_TERRAIN), (int)(cameraCordsOffset.z / SIZE_TERRAIN) };
+
+			std::cout << posValue[0] << ", " << posValue[1] << std::endl;
+
+			// Makes deer move upwards and downwards with the terrain
+			if (heights[posValue[0]][posValue[1]] > (cameraCordsOffset.y + GRAVITY * timeSpent) / SIZE_TERRAIN) {
+				cameraCordsOffset.y += GRAVITY * timeSpent;
+			}
+			else if (heights[posValue[0]][posValue[1]] < (cameraCordsOffset.y - DEER_UPWARDS_MOVEMENT * timeSpent) / SIZE_TERRAIN) {
+				cameraCordsOffset.y -= DEER_UPWARDS_MOVEMENT * timeSpent;
 			}
 		}
 
