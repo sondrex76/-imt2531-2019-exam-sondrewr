@@ -349,10 +349,12 @@ int main() {
 		else {	// third and first camera
 			if (currentCamera == firstCamera) // first person 
 			{
-				deerPosition = cameraCordsOffset - glm::vec3(0, DEER_FIRST_HEIGHT_OFFSET, 0); // sets position of deer
+				deerPosition = cameraCordsOffset - DEER_FIRST_HEIGHT_OFFSET; // sets position of deer
 			}
 			else {	// Third person
-				deerPosition = cameraCordsOffset - glm::vec3(0, DEER_THIRD_HEIGHT_OFFSET, 0); // sets position of deer
+				deerPosition = cameraCordsOffset - DEER_THIRD_HEIGHT_OFFSET; // sets position of deer
+
+
 			}
 
 			// Movement forwards, backwards
@@ -379,8 +381,8 @@ int main() {
 			};
 
 			posValue[2] = heights[posValue[0]][posValue[1]] * SIZE_TERRAIN * HEIGHT_TERRAIN +
-				(currentCamera == firstCamera ? (DEER_FIRST_HEIGHT_OFFSET) :
-				(DEER_THIRD_HEIGHT_OFFSET));
+				(currentCamera == firstCamera ? (DEER_FIRST_HEIGHT_OFFSET.y) :
+				(DEER_THIRD_HEIGHT_OFFSET.y));
 
 			movementVector.x *= DEER_SPEED;	// Modifies the added movement based on the deer's speed
 			movementVector.z *= DEER_SPEED;	
