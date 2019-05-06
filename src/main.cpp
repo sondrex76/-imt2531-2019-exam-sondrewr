@@ -138,7 +138,7 @@ int main() {
 	for (int i = 0; i < SIZE_ENVIORMENT; i++) { // x
 		for (int n = 0; n < SIZE_ENVIORMENT; n++) { // y
 			heights[i][n] = perlin((float)i / SIZE_DIVIDER, (float)n / SIZE_DIVIDER);
-			if (heights[i][n] <= MAX_HEIGHT * HEIGHT_STAGES[0]) // Sea level
+			if (heights[i][n] < MAX_HEIGHT * HEIGHT_STAGES[0]) // Sea level
 				heights[i][n] = MAX_HEIGHT * HEIGHT_STAGES[0];
 		}
 	}
@@ -372,16 +372,30 @@ int main() {
 			}
 
 			// Value used in if statement below so tha tthe same calculations need not be done twice
-			int posValue[] = { (int)(cameraCordsOffset.x / SIZE_TERRAIN), (int)(cameraCordsOffset.z / SIZE_TERRAIN) };
+			int posValue[] = {													// Values used to calculate if deer should move upwards or downwards
+				(int)(cameraCordsOffset.x / SIZE_TERRAIN),						// x			
+				(int)(cameraCordsOffset.z / SIZE_TERRAIN),						// z
+				0																// Height value based on camera mode, is updated below
+			};
 
-			std::cout << posValue[0] << ", " << posValue[1] << std::endl;
+			posValue[2] = heights[posValue[0]][posValue[1]] * SIZE_TERRAIN * HEIGHT_TERRAIN +
+				(currentCamera == firstCamera ? (DEER_FIRST_HEIGHT_OFFSET) :
+				(DEER_THIRD_HEIGHT_OFFSET));
 
-			// Makes deer move upwards and downwards with the terrain
-			if (heights[posValue[0]][posValue[1]] > (cameraCordsOffset.y + GRAVITY * timeSpent) / SIZE_TERRAIN) {
-				cameraCordsOffset.y += GRAVITY * timeSpent;
-			}
-			else if (heights[posValue[0]][posValue[1]] < (cameraCordsOffset.y - DEER_UPWARDS_MOVEMENT * timeSpent) / SIZE_TERRAIN) {
-				cameraCordsOffset.y -= DEER_UPWARDS_MOVEMENT * timeSpent;
+			movementVector.x *= DEER_SPEED;	// Modifies the added movement based on the deer's speed
+			movementVector.z *= DEER_SPEED;	
+
+			if (validLocation(posValue[0]) && validLocation(posValue[1])) {		// Ensures location is valid
+				// Makes deer move upwards and downwards with the terrain
+
+				std::cout << posValue[0] << ", " << posValue[1] << ", " <<  posValue[2] << ", " << cameraCordsOffset.y << std::endl;
+
+				if (posValue[2] > (cameraCordsOffset.y)) {
+					cameraCordsOffset.y += DEER_UPWARDS_MOVEMENT * timeSpent;
+				}
+				else if (posValue[2] < (cameraCordsOffset.y - ALLOWED_VARIANCE_DOWN)) {
+					cameraCordsOffset.y -= GRAVITY * timeSpent;
+				}
 			}
 		}
 
